@@ -1,0 +1,847 @@
+openapi: 3.1.0
+info:
+  title: FLECS Daemon API
+  version: 2.0.0
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+components:
+  schemas:
+    # Common schemas
+    additionalInfo:
+      type: object
+      description: Additional info
+      properties:
+        additionalInfo:
+          type: string
+    # App related schemas
+    app_key:
+      type: object
+      properties:
+        name:
+          type: string
+          example: tech.flecs.app-1
+        version:
+          type: string
+          example: 1.2.3.4-f1
+    app_status:
+      type: string
+      enum:
+        [
+          not installed,
+          manifest downloaded,
+          token acquired,
+          image downloaded,
+          installed,
+          removed,
+          purged,
+          orphaned,
+          unknown,
+        ]
+    installed_app:
+      properties:
+        appKey:
+          $ref: "#/components/schemas/app_key"
+        status:
+          $ref: "#/components/schemas/app_status"
+        desired:
+          $ref: "#/components/schemas/app_status"
+        installedSize:
+          type: integer
+          example: 10485760
+    license_key:
+      type: string
+      description: License key for App installation
+      example: "538E-A5E8-84A3-D798"
+    # Instance related schemas
+    instance_id:
+      type: string
+      pattern: "^[0-9a-f]{8}$"
+      example: 01ab89ef
+    instance_name:
+      type: string
+      description: Instance name
+      example: "Smart home"
+    instance_status:
+      type: string
+      enum:
+        [
+          not created,
+          requested,
+          resources ready,
+          created,
+          stopped,
+          running,
+          orphaned,
+          unknown,
+        ]
+    app_instance:
+      description: Instance of an App
+      properties:
+        instanceId:
+          $ref: "#/components/schemas/instance_id"
+        instanceName:
+          $ref: "#/components/schemas/instance_name"
+        appKey:
+          $ref: "#/components/schemas/app_key"
+        status:
+          $ref: "#/components/schemas/instance_status"
+        desired:
+          $ref: "#/components/schemas/instance_status"
+    instance_detail_hostname:
+      type: string
+      description: Hostname of an instance
+      example: "flecs-01ab89ef"
+    instance_detail_ip_address:
+      type: string
+      description: IP address of an instance
+      format: ipv4
+      example: 172.21.0.3
+    instance_detail_conffile:
+      type: object
+      properties:
+        container:
+          type: string
+          example: "/etc/conf.d/configuration.cfg"
+        host:
+          type: string
+          example: "/var/lib/flecs/instances/01ab89ef/conf/configuration.cfg"
+    instance_detail_conffiles:
+      type: array
+      items:
+        $ref: "#/components/schemas/instance_detail_conffile"
+    instance_detail_mounts:
+      type: object
+      description: Bind mounts of an instance
+      properties:
+        mounts:
+          type: array
+          items:
+            type: object
+            properties:
+              container:
+                type: string
+                example: "/path/to/dir"
+              host:
+                type: string
+                example: "/path/to/host/dir"
+    instance_detail_ports:
+      type: object
+      description: Allocated network ports of an instance
+      properties:
+        ports:
+          type: array
+          items:
+            type: object
+            properties:
+              container:
+                type: string
+                example: "8080"
+              host:
+                type: string
+                example: "18080"
+    instance_detail_volumes:
+      type: object
+      description: Automatic volumes of an instance
+      properties:
+        volumes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "var"
+              path:
+                type: string
+                example: "/var/app"
+    # Job related schemas
+    job_id:
+      type: integer
+      format: int32
+      minimum: 1
+      maximum: 4294967295
+    job_status:
+      type: string
+      enum: [pending, queued, running, cancelled, successful, failed, unknown]
+    job_step:
+      type: object
+      properties:
+        description:
+          type: string
+          example: Downloading...
+        num:
+          type: integer
+          example: 3
+        unit:
+          type: integer
+          example: B
+        unitsTotal:
+          type: integer
+          example: 10485761
+        unitsDone:
+          type: integer
+          example: 5120000
+        rate:
+          type: integer
+          example: 2048
+    job_result:
+      type: object
+      properties:
+        exit_code:
+          type: integer
+          example: -1
+        message:
+          type: string
+          example: Explanation what went wrong
+    job:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/job_id"
+        status:
+          $ref: "#/components/schemas/job_status"
+        description:
+          type: string
+          example: Installation of FLECS App 1 (1.2.3.4-f1)
+        numSteps:
+          type: integer
+          example: 5
+        currentStep:
+          $ref: "#/components/schemas/job_step"
+        result:
+          $ref: "#/components/schemas/job_result"
+    job_meta:
+      type: object
+      description: Job metadata for accepted requests
+      properties:
+        jobId:
+          type: integer
+          example: 17
+  # Common responses
+  responses:
+    response_202:
+      description: Accepted
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/job_meta"
+    response_400:
+      description: Malformed request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              additionalInfo:
+                type: string
+                example: "Details what is wrong"
+    response_401:
+      description: Unauthorized
+    response_403:
+      description: Forbidden
+    response_404:
+      description: Resource not found
+    response_500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              additionalInfo:
+                type: string
+                example: "Explanation what went wrong"
+
+tags:
+  - name: "Apps"
+    x-displayName: "Apps"
+    description: Install, manage and uninstall Apps
+  - name: "Instances"
+    x-displayName: "Instances"
+    description: Create, manage and delete Instances
+  - name: "Jobs"
+    x-displayName: "Jobs"
+    description: Management of asynchronous jobs
+  - name: "flunder"
+    x-displayName: "Service Mesh"
+    description: |
+      FLECS Service Mesh a.k.a flunder (<b>FL</b>ecs <b>UN</b>ified <b>D</b>ata <b>E</b>xchange and <b>R</b>etention)
+  - name: "System"
+    x-displayName: "System"
+  - name: "Device"
+    x-displayName: "Device"
+
+paths:
+  # App related paths
+  /apps:
+    get:
+      tags: ["Apps"]
+      summary: Query installed Apps
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/installed_app"
+  /apps/{app}:
+    get:
+      tags: ["Apps"]
+      summary: Query all versions or specific versions of an App
+      parameters:
+        - name: app
+          in: path
+          schema:
+            type: string
+            description: App to query
+          required: true
+        - name: version
+          in: query
+          schema:
+            type: string
+            description: App version to query
+          required: false
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/installed_app"
+        "404":
+          description: No such app or app/version combination
+    delete:
+      tags: ["Apps"]
+      summary: Uninstall one or all versions an App
+      parameters:
+        - name: app
+          in: path
+          schema:
+            type: string
+            description: App to uninstall
+          required: true
+        - name: version
+          in: query
+          schema:
+            type: string
+            description: App version to uninstall
+          required: false
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "404":
+          description: No such app or app/version combination
+  /apps/install:
+    post:
+      tags: ["Apps"]
+      summary: Install an App from the FLECS marketplace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                appKey:
+                  $ref: "#/components/schemas/app_key"
+                licenseKey:
+                  $ref: "#/components/schemas/license_key"
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "400":
+          $ref: "#/components/responses/response_400"
+        "500":
+          $ref: "#/components/responses/response_500"
+  /apps/sideload:
+    post:
+      tags: ["Apps"]
+      summary: Sideload an App from its manifest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                manifest:
+                  type: string
+                licenseKey:
+                  type: string
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "400":
+          $ref: "#/components/responses/response_400"
+  # Instance related paths
+  /instances:
+    get:
+      tags: ["Instances"]
+      summary: Query all instances of one or all Apps
+      parameters:
+        - name: app
+          in: query
+          schema:
+            type: string
+            description: App to query instances for
+          required: false
+        - name: version
+          in: query
+          schema:
+            type: string
+            description: App version to query instances for
+          required: false
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/app_instance"
+  /instances/{instance_id}:
+    get:
+      tags: ["Instances"]
+      summary: Obtain details of an App instance
+      parameters:
+        - name: instance_id
+          in: path
+          schema:
+            $ref: "#/components/schemas/instance_id"
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  instanceId:
+                    $ref: "#/components/schemas/instance_id"
+                  instanceName:
+                    $ref: "#/components/schemas/instance_name"
+                  appKey:
+                    $ref: "#/components/schemas/app_key"
+                  status:
+                    $ref: "#/components/schemas/instance_status"
+                  desired:
+                    $ref: "#/components/schemas/instance_status"
+                  conffiles:
+                    $ref: "#/components/schemas/instance_detail_conffiles"
+                  hostname:
+                    $ref: "#/components/schemas/instance_detail_hostname"
+                  ipAddress:
+                    $ref: "#/components/schemas/instance_detail_ip_address"
+                  ports:
+                    $ref: "#/components/schemas/instance_detail_ports"
+                  volumes:
+                    $ref: "#/components/schemas/instance_detail_volumes"
+        "404":
+          description: No instance with this instance_id found
+    patch:
+      tags: ["Instances"]
+      summary: Update or downgrade Instance to another App version
+      parameters:
+        - name: instance_id
+          in: path
+          schema:
+            $ref: "#/components/schemas/instance_id"
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to:
+                  type: string
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "404":
+          description: No instance with this instance_id found
+    delete:
+      tags: ["Instances"]
+      summary: Delete a single instance
+      parameters:
+        - name: instance_id
+          in: path
+          schema:
+            $ref: "#/components/schemas/instance_id"
+          required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "404":
+          description: No instance with this instance_id found
+  /instances/create:
+    post:
+      tags: ["Instances"]
+      summary: Create new instance of an installed App
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                appKey:
+                  $ref: "#/components/schemas/app_key"
+                instanceName:
+                  $ref: "#/components/schemas/instance_name"
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "400":
+          $ref: "#/components/responses/response_400"
+  /instance/{instance_id}/start:
+    post:
+      tags: ["Instances"]
+      summary: Start an App instance
+      parameters:
+        - name: instance_id
+          in: path
+          schema:
+            $ref: "#/components/schemas/instance_id"
+          required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "404":
+          description: No instance with this instance_id found
+  /instance/{instance_id}/stop:
+    post:
+      tags: ["Instances"]
+      summary: Stop an App instance
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+            description: Instance id to delete
+          required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/response_202"
+        "404":
+          description: No instance with this instance_id found
+  /instance/{instance_id}/config:
+    get:
+      tags: ["Instances"]
+      summary: Get configuration of an Instance
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  networkAdapters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                        connected:
+                          type: boolean
+                        ipAddress:
+                          type: string
+                          format: ipv4
+                        subnetMask:
+                          type: string
+                          format: ipv4
+                        gateway:
+                          type: string
+                          format: ipv4
+                  usbDevices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        device:
+                          type: string
+                        pid:
+                          type: integer
+                        port:
+                          type: string
+                        vendor:
+                          type: string
+                        vid:
+                          type: integer
+                        active:
+                          type: boolean
+                        connected:
+                          type: boolean
+    post:
+      tags: ["Instances"]
+      summary: Update configuration of an Instance
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                networkAdapters:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      active:
+                        type: boolean
+                      ipAddress:
+                        type: string
+                        format: ipv4
+                usbDevices:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      device:
+                        type: string
+                      pid:
+                        type: integer
+                      port:
+                        type: string
+                      vendor:
+                        type: string
+                      vid:
+                        type: integer
+                      active:
+                        type: boolean
+  /instance/{instance_id}/logs:
+    get:
+      tags: ["Instances"]
+      summary: Retrieve logs of an Instance
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stdout:
+                    type: string
+                  stderr:
+                    type: string
+  # flunder related paths
+  /flunder/browse:
+    get:
+      tags: ["flunder"]
+      summary: Retrieve stored flunder topics alongside their values
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+            example: "/flecs/**"
+          required: false
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        topic:
+                          type: string
+                          example: "/flecs/app1/heater0/temperature"
+                        value:
+                          type: string
+                          example: "23"
+                        encoding:
+                          type: string
+                          example: "application/integer+s8"
+                        timestamp:
+                          type: string
+                          example:
+  /flunder/{topic}:
+    get:
+      tags: ["flunder"]
+      summary: Retrieve value of a stored flunder topic
+      parameters:
+        - name: topic
+          in: path
+          schema:
+            type: string
+            example: "/flecs/app1/heater0/temperature"
+          required: true
+    put:
+      tags: ["flunder"]
+      summary: Publish a topic to flunder
+      parameters:
+        - name: topic
+          in: path
+          schema:
+            type: string
+            example: "/flecs/app1/heater0/temperature"
+          required: true
+        - name: value
+          in: query
+          schema:
+            type: string
+            example: "23"
+        - name: type
+          in: query
+          schema:
+            type: string
+            example: "bool"
+    delete:
+      tags: ["flunder"]
+      summary: Delete a stored flunder topic
+      parameters:
+        - name: topic
+          in: path
+          schema:
+            type: string
+            example: "/flecs/app1/heater0/temperature"
+          required: true
+  # Job related paths
+  /jobs:
+    get:
+      tags: ["Jobs"]
+      summary: Retrieve a list of all pending/queued/running/failed/cancelled jobs
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/job"
+  /jobs/{job_id}:
+    get:
+      tags: ["Jobs"]
+      summary: Retrieve information for specific job_id
+      parameters:
+        - name: job_id
+          in: path
+          schema:
+            type: integer
+            description: job_id to query
+          required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/job"
+        "404":
+          description: Not found
+    delete:
+      tags: ["Jobs"]
+      summary: Cancel job or remove failed/successful/cancelled job from journal
+      responses:
+        "200":
+          description: Success
+        "404":
+          description: Not found
+  # System related paths
+  /system/ping:
+    get:
+      tags: ["System"]
+      summary: Check daemon availability and connectivity
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  additionalInfo:
+                    type: string
+                    example: "OK"
+  /system/version:
+    get:
+      tags: ["System"]
+      summary: Get FLECS core and API version
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api:
+                    type: string
+                    example: "2.0.0"
+                  core:
+                    type: string
+                    example: "v2.0.0-???"
+  /device/license/activation:
+    post:
+      tags: ["Device"]
+      summary: Execute device activation
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  additionalInfo:
+                    type: string
+                    example: "OK"
+        "500":
+          $ref: "#/components/responses/response_500"
+  /device/license/activation/status:
+    get:
+      tags: ["Device"]
+      summary: Check if device is activated
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isValid:
+                    type: boolean
+                    example: true
+        "500":
+          $ref: "#/components/responses/response_500"
