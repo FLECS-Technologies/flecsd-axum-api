@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
   title: FLECS Daemon API
   version: 2.0.0
@@ -522,7 +522,7 @@ paths:
       tags: ["Instances"]
       summary: Stop an App instance
       parameters:
-        - name: id
+        - name: instance_id
           in: path
           schema:
             type: string
@@ -538,7 +538,7 @@ paths:
       tags: ["Instances"]
       summary: Get configuration of an Instance
       parameters:
-        - name: id
+        - name: instance_id
           in: path
           schema:
             type: string
@@ -594,7 +594,7 @@ paths:
       tags: ["Instances"]
       summary: Update configuration of an Instance
       parameters:
-        - name: id
+        - name: instance_id
           in: path
           schema:
             type: string
@@ -635,12 +635,59 @@ paths:
                         type: integer
                       active:
                         type: boolean
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  networkAdapters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                        connected:
+                          type: boolean
+                        ipAddress:
+                          type: string
+                          format: ipv4
+                        subnetMask:
+                          type: string
+                          format: ipv4
+                        gateway:
+                          type: string
+                          format: ipv4
+                  usbDevices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        device:
+                          type: string
+                        pid:
+                          type: integer
+                        port:
+                          type: string
+                        vendor:
+                          type: string
+                        vid:
+                          type: integer
+                        active:
+                          type: boolean
+                        connected:
+                          type: boolean
   /instance/{instance_id}/logs:
     get:
       tags: ["Instances"]
       summary: Retrieve logs of an Instance
       parameters:
-        - name: id
+        - name: instance_id
           in: path
           schema:
             type: string
@@ -694,47 +741,7 @@ paths:
                         timestamp:
                           type: string
                           example:
-  /flunder/{topic}:
-    get:
-      tags: ["flunder"]
-      summary: Retrieve value of a stored flunder topic
-      parameters:
-        - name: topic
-          in: path
-          schema:
-            type: string
-            example: "/flecs/app1/heater0/temperature"
-          required: true
-    put:
-      tags: ["flunder"]
-      summary: Publish a topic to flunder
-      parameters:
-        - name: topic
-          in: path
-          schema:
-            type: string
-            example: "/flecs/app1/heater0/temperature"
-          required: true
-        - name: value
-          in: query
-          schema:
-            type: string
-            example: "23"
-        - name: type
-          in: query
-          schema:
-            type: string
-            example: "bool"
-    delete:
-      tags: ["flunder"]
-      summary: Delete a stored flunder topic
-      parameters:
-        - name: topic
-          in: path
-          schema:
-            type: string
-            example: "/flecs/app1/heater0/temperature"
-          required: true
+
   # Job related paths
   /jobs:
     get:
@@ -772,6 +779,13 @@ paths:
     delete:
       tags: ["Jobs"]
       summary: Cancel job or remove failed/successful/cancelled job from journal
+      parameters:
+        - name: job_id
+          in: path
+          schema:
+            type: integer
+            description: job_id to query
+          required: true
       responses:
         "200":
           description: Success
