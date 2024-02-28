@@ -45,41 +45,6 @@ pub struct FlunderBrowseGetQueryParams {
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigGetPathParams {
-    pub instance_id: String,
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigPostPathParams {
-    pub instance_id: String,
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdLogsGetPathParams {
-    pub instance_id: String,
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdStartPostPathParams {
-    #[validate(regex = "RE_INSTANCEINSTANCEIDSTARTPOSTPATHPARAMS_INSTANCE_ID")]
-    pub instance_id: String,
-}
-
-lazy_static::lazy_static! {
-    static ref RE_INSTANCEINSTANCEIDSTARTPOSTPATHPARAMS_INSTANCE_ID: regex::Regex = regex::Regex::new(r"^[0-9a-f]{8}$").unwrap();
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdStopPostPathParams {
-    pub instance_id: String,
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstancesGetQueryParams {
     #[serde(rename = "app")]
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -87,6 +52,18 @@ pub struct InstancesGetQueryParams {
     #[serde(rename = "version")]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub version: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstancesInstanceIdConfigGetPathParams {
+    pub instance_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstancesInstanceIdConfigPostPathParams {
+    pub instance_id: String,
 }
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
@@ -113,6 +90,12 @@ lazy_static::lazy_static! {
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstancesInstanceIdLogsGetPathParams {
+    pub instance_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstancesInstanceIdPatchPathParams {
     #[validate(regex = "RE_INSTANCESINSTANCEIDPATCHPATHPARAMS_INSTANCE_ID")]
     pub instance_id: String,
@@ -120,6 +103,23 @@ pub struct InstancesInstanceIdPatchPathParams {
 
 lazy_static::lazy_static! {
     static ref RE_INSTANCESINSTANCEIDPATCHPATHPARAMS_INSTANCE_ID: regex::Regex = regex::Regex::new(r"^[0-9a-f]{8}$").unwrap();
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstancesInstanceIdStartPostPathParams {
+    #[validate(regex = "RE_INSTANCESINSTANCEIDSTARTPOSTPATHPARAMS_INSTANCE_ID")]
+    pub instance_id: String,
+}
+
+lazy_static::lazy_static! {
+    static ref RE_INSTANCESINSTANCEIDSTARTPOSTPATHPARAMS_INSTANCE_ID: regex::Regex = regex::Regex::new(r"^[0-9a-f]{8}$").unwrap();
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstancesInstanceIdStopPostPathParams {
+    pub instance_id: String,
 }
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
@@ -140,16 +140,13 @@ pub struct JobsJobIdGetPathParams {
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct AdditionalInfo {
     #[serde(rename = "additionalInfo")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_info: Option<String>,
+    pub additional_info: String,
 }
 
 impl AdditionalInfo {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AdditionalInfo {
-        AdditionalInfo {
-            additional_info: None,
-        }
+    pub fn new(additional_info: String) -> AdditionalInfo {
+        AdditionalInfo { additional_info }
     }
 }
 
@@ -158,10 +155,10 @@ impl AdditionalInfo {
 /// Should be implemented in a serde serializer
 impl std::string::ToString for AdditionalInfo {
     fn to_string(&self) -> String {
-        let params: Vec<Option<String>> =
-            vec![self.additional_info.as_ref().map(|additional_info| {
-                ["additionalInfo".to_string(), additional_info.to_string()].join(",")
-            })];
+        let params: Vec<Option<String>> = vec![
+            Some("additionalInfo".to_string()),
+            Some(self.additional_info.to_string()),
+        ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
@@ -218,7 +215,11 @@ impl std::str::FromStr for AdditionalInfo {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(AdditionalInfo {
-            additional_info: intermediate_rep.additional_info.into_iter().next(),
+            additional_info: intermediate_rep
+                .additional_info
+                .into_iter()
+                .next()
+                .ok_or_else(|| "additionalInfo missing in AdditionalInfo".to_string())?,
         })
     }
 }
@@ -275,25 +276,20 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AdditionalIn
 pub struct AppInstance {
     #[serde(rename = "instanceId")]
     #[validate(regex = "RE_APPINSTANCE_INSTANCE_ID")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub instance_id: Option<String>,
+    pub instance_id: String,
 
     /// Instance name
     #[serde(rename = "instanceName")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub instance_name: Option<String>,
+    pub instance_name: String,
 
     #[serde(rename = "appKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub app_key: Option<models::AppKey>,
+    pub app_key: models::AppKey,
 
     #[serde(rename = "status")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::InstanceStatus>,
+    pub status: models::InstanceStatus,
 
     #[serde(rename = "desired")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub desired: Option<models::InstanceStatus>,
+    pub desired: models::InstanceStatus,
 }
 
 lazy_static::lazy_static! {
@@ -302,13 +298,19 @@ lazy_static::lazy_static! {
 
 impl AppInstance {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AppInstance {
+    pub fn new(
+        instance_id: String,
+        instance_name: String,
+        app_key: models::AppKey,
+        status: models::InstanceStatus,
+        desired: models::InstanceStatus,
+    ) -> AppInstance {
         AppInstance {
-            instance_id: None,
-            instance_name: None,
-            app_key: None,
-            status: None,
-            desired: None,
+            instance_id,
+            instance_name,
+            app_key,
+            status,
+            desired,
         }
     }
 }
@@ -319,12 +321,10 @@ impl AppInstance {
 impl std::string::ToString for AppInstance {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.instance_id
-                .as_ref()
-                .map(|instance_id| ["instanceId".to_string(), instance_id.to_string()].join(",")),
-            self.instance_name.as_ref().map(|instance_name| {
-                ["instanceName".to_string(), instance_name.to_string()].join(",")
-            }),
+            Some("instanceId".to_string()),
+            Some(self.instance_id.to_string()),
+            Some("instanceName".to_string()),
+            Some(self.instance_name.to_string()),
             // Skipping appKey in query parameter serialization
 
             // Skipping status in query parameter serialization
@@ -410,11 +410,31 @@ impl std::str::FromStr for AppInstance {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(AppInstance {
-            instance_id: intermediate_rep.instance_id.into_iter().next(),
-            instance_name: intermediate_rep.instance_name.into_iter().next(),
-            app_key: intermediate_rep.app_key.into_iter().next(),
-            status: intermediate_rep.status.into_iter().next(),
-            desired: intermediate_rep.desired.into_iter().next(),
+            instance_id: intermediate_rep
+                .instance_id
+                .into_iter()
+                .next()
+                .ok_or_else(|| "instanceId missing in AppInstance".to_string())?,
+            instance_name: intermediate_rep
+                .instance_name
+                .into_iter()
+                .next()
+                .ok_or_else(|| "instanceName missing in AppInstance".to_string())?,
+            app_key: intermediate_rep
+                .app_key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "appKey missing in AppInstance".to_string())?,
+            status: intermediate_rep
+                .status
+                .into_iter()
+                .next()
+                .ok_or_else(|| "status missing in AppInstance".to_string())?,
+            desired: intermediate_rep
+                .desired
+                .into_iter()
+                .next()
+                .ok_or_else(|| "desired missing in AppInstance".to_string())?,
         })
     }
 }
@@ -468,21 +488,16 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AppInstance>
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct AppKey {
     #[serde(rename = "name")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
+    pub name: String,
 
     #[serde(rename = "version")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub version: Option<String>,
+    pub version: String,
 }
 
 impl AppKey {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AppKey {
-        AppKey {
-            name: None,
-            version: None,
-        }
+    pub fn new(name: String, version: String) -> AppKey {
+        AppKey { name, version }
     }
 }
 
@@ -492,12 +507,10 @@ impl AppKey {
 impl std::string::ToString for AppKey {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.name
-                .as_ref()
-                .map(|name| ["name".to_string(), name.to_string()].join(",")),
-            self.version
-                .as_ref()
-                .map(|version| ["version".to_string(), version.to_string()].join(",")),
+            Some("name".to_string()),
+            Some(self.name.to_string()),
+            Some("version".to_string()),
+            Some(self.version.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -560,8 +573,16 @@ impl std::str::FromStr for AppKey {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(AppKey {
-            name: intermediate_rep.name.into_iter().next(),
-            version: intermediate_rep.version.into_iter().next(),
+            name: intermediate_rep
+                .name
+                .into_iter()
+                .next()
+                .ok_or_else(|| "name missing in AppKey".to_string())?,
+            version: intermediate_rep
+                .version
+                .into_iter()
+                .next()
+                .ok_or_else(|| "version missing in AppKey".to_string())?,
         })
     }
 }
@@ -678,288 +699,15 @@ impl std::str::FromStr for AppStatus {
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct AppsInstallPost400Response {
-    #[serde(rename = "additionalInfo")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_info: Option<String>,
-}
-
-impl AppsInstallPost400Response {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AppsInstallPost400Response {
-        AppsInstallPost400Response {
-            additional_info: None,
-        }
-    }
-}
-
-/// Converts the AppsInstallPost400Response value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for AppsInstallPost400Response {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> =
-            vec![self.additional_info.as_ref().map(|additional_info| {
-                ["additionalInfo".to_string(), additional_info.to_string()].join(",")
-            })];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a AppsInstallPost400Response value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for AppsInstallPost400Response {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub additional_info: Vec<String>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing AppsInstallPost400Response".to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "additionalInfo" => intermediate_rep.additional_info.push(
-                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
-                    ),
-                    _ => {
-                        return std::result::Result::Err(
-                            "Unexpected key while parsing AppsInstallPost400Response".to_string(),
-                        )
-                    }
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(AppsInstallPost400Response {
-            additional_info: intermediate_rep.additional_info.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<AppsInstallPost400Response> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<AppsInstallPost400Response>> for HeaderValue {
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<AppsInstallPost400Response>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-            std::result::Result::Ok(value) => std::result::Result::Ok(value),
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for AppsInstallPost400Response - value: {} is invalid {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AppsInstallPost400Response> {
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-            std::result::Result::Ok(value) => {
-                match <AppsInstallPost400Response as std::str::FromStr>::from_str(value) {
-                    std::result::Result::Ok(value) => {
-                        std::result::Result::Ok(header::IntoHeaderValue(value))
-                    }
-                    std::result::Result::Err(err) => std::result::Result::Err(format!(
-                        "Unable to convert header value '{}' into AppsInstallPost400Response - {}",
-                        value, err
-                    )),
-                }
-            }
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Unable to convert header: {:?} to string: {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct AppsInstallPost500Response {
-    #[serde(rename = "additionalInfo")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_info: Option<String>,
-}
-
-impl AppsInstallPost500Response {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AppsInstallPost500Response {
-        AppsInstallPost500Response {
-            additional_info: None,
-        }
-    }
-}
-
-/// Converts the AppsInstallPost500Response value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for AppsInstallPost500Response {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> =
-            vec![self.additional_info.as_ref().map(|additional_info| {
-                ["additionalInfo".to_string(), additional_info.to_string()].join(",")
-            })];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a AppsInstallPost500Response value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for AppsInstallPost500Response {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub additional_info: Vec<String>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing AppsInstallPost500Response".to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "additionalInfo" => intermediate_rep.additional_info.push(
-                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
-                    ),
-                    _ => {
-                        return std::result::Result::Err(
-                            "Unexpected key while parsing AppsInstallPost500Response".to_string(),
-                        )
-                    }
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(AppsInstallPost500Response {
-            additional_info: intermediate_rep.additional_info.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<AppsInstallPost500Response> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<AppsInstallPost500Response>> for HeaderValue {
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<AppsInstallPost500Response>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-            std::result::Result::Ok(value) => std::result::Result::Ok(value),
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for AppsInstallPost500Response - value: {} is invalid {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AppsInstallPost500Response> {
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-            std::result::Result::Ok(value) => {
-                match <AppsInstallPost500Response as std::str::FromStr>::from_str(value) {
-                    std::result::Result::Ok(value) => {
-                        std::result::Result::Ok(header::IntoHeaderValue(value))
-                    }
-                    std::result::Result::Err(err) => std::result::Result::Err(format!(
-                        "Unable to convert header value '{}' into AppsInstallPost500Response - {}",
-                        value, err
-                    )),
-                }
-            }
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Unable to convert header: {:?} to string: {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct AppsInstallPostRequest {
     #[serde(rename = "appKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub app_key: Option<models::AppKey>,
-
-    /// License key for App installation
-    #[serde(rename = "licenseKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub license_key: Option<String>,
+    pub app_key: models::AppKey,
 }
 
 impl AppsInstallPostRequest {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AppsInstallPostRequest {
-        AppsInstallPostRequest {
-            app_key: None,
-            license_key: None,
-        }
+    pub fn new(app_key: models::AppKey) -> AppsInstallPostRequest {
+        AppsInstallPostRequest { app_key }
     }
 }
 
@@ -970,9 +718,7 @@ impl std::string::ToString for AppsInstallPostRequest {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
             // Skipping appKey in query parameter serialization
-            self.license_key
-                .as_ref()
-                .map(|license_key| ["licenseKey".to_string(), license_key.to_string()].join(",")),
+
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -991,7 +737,6 @@ impl std::str::FromStr for AppsInstallPostRequest {
         #[allow(dead_code)]
         struct IntermediateRep {
             pub app_key: Vec<models::AppKey>,
-            pub license_key: Vec<String>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -1018,10 +763,6 @@ impl std::str::FromStr for AppsInstallPostRequest {
                         <models::AppKey as std::str::FromStr>::from_str(val)
                             .map_err(|x| x.to_string())?,
                     ),
-                    #[allow(clippy::redundant_clone)]
-                    "licenseKey" => intermediate_rep.license_key.push(
-                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
-                    ),
                     _ => {
                         return std::result::Result::Err(
                             "Unexpected key while parsing AppsInstallPostRequest".to_string(),
@@ -1036,8 +777,11 @@ impl std::str::FromStr for AppsInstallPostRequest {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(AppsInstallPostRequest {
-            app_key: intermediate_rep.app_key.into_iter().next(),
-            license_key: intermediate_rep.license_key.into_iter().next(),
+            app_key: intermediate_rep
+                .app_key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "appKey missing in AppsInstallPostRequest".to_string())?,
         })
     }
 }
@@ -1091,21 +835,13 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AppsInstallP
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct AppsSideloadPostRequest {
     #[serde(rename = "manifest")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub manifest: Option<String>,
-
-    #[serde(rename = "licenseKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub license_key: Option<String>,
+    pub manifest: String,
 }
 
 impl AppsSideloadPostRequest {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> AppsSideloadPostRequest {
-        AppsSideloadPostRequest {
-            manifest: None,
-            license_key: None,
-        }
+    pub fn new(manifest: String) -> AppsSideloadPostRequest {
+        AppsSideloadPostRequest { manifest }
     }
 }
 
@@ -1115,12 +851,8 @@ impl AppsSideloadPostRequest {
 impl std::string::ToString for AppsSideloadPostRequest {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.manifest
-                .as_ref()
-                .map(|manifest| ["manifest".to_string(), manifest.to_string()].join(",")),
-            self.license_key
-                .as_ref()
-                .map(|license_key| ["licenseKey".to_string(), license_key.to_string()].join(",")),
+            Some("manifest".to_string()),
+            Some(self.manifest.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -1139,7 +871,6 @@ impl std::str::FromStr for AppsSideloadPostRequest {
         #[allow(dead_code)]
         struct IntermediateRep {
             pub manifest: Vec<String>,
-            pub license_key: Vec<String>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -1165,10 +896,6 @@ impl std::str::FromStr for AppsSideloadPostRequest {
                     "manifest" => intermediate_rep.manifest.push(
                         <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
                     ),
-                    #[allow(clippy::redundant_clone)]
-                    "licenseKey" => intermediate_rep.license_key.push(
-                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
-                    ),
                     _ => {
                         return std::result::Result::Err(
                             "Unexpected key while parsing AppsSideloadPostRequest".to_string(),
@@ -1183,8 +910,11 @@ impl std::str::FromStr for AppsSideloadPostRequest {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(AppsSideloadPostRequest {
-            manifest: intermediate_rep.manifest.into_iter().next(),
-            license_key: intermediate_rep.license_key.into_iter().next(),
+            manifest: intermediate_rep
+                .manifest
+                .into_iter()
+                .next()
+                .ok_or_else(|| "manifest missing in AppsSideloadPostRequest".to_string())?,
         })
     }
 }
@@ -1238,14 +968,13 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<AppsSideload
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct DeviceLicenseActivationStatusGet200Response {
     #[serde(rename = "isValid")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub is_valid: Option<bool>,
+    pub is_valid: bool,
 }
 
 impl DeviceLicenseActivationStatusGet200Response {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> DeviceLicenseActivationStatusGet200Response {
-        DeviceLicenseActivationStatusGet200Response { is_valid: None }
+    pub fn new(is_valid: bool) -> DeviceLicenseActivationStatusGet200Response {
+        DeviceLicenseActivationStatusGet200Response { is_valid }
     }
 }
 
@@ -1254,10 +983,8 @@ impl DeviceLicenseActivationStatusGet200Response {
 /// Should be implemented in a serde serializer
 impl std::string::ToString for DeviceLicenseActivationStatusGet200Response {
     fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![self
-            .is_valid
-            .as_ref()
-            .map(|is_valid| ["isValid".to_string(), is_valid.to_string()].join(","))];
+        let params: Vec<Option<String>> =
+            vec![Some("isValid".to_string()), Some(self.is_valid.to_string())];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
@@ -1313,7 +1040,13 @@ impl std::str::FromStr for DeviceLicenseActivationStatusGet200Response {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(DeviceLicenseActivationStatusGet200Response {
-            is_valid: intermediate_rep.is_valid.into_iter().next(),
+            is_valid: intermediate_rep
+                .is_valid
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "isValid missing in DeviceLicenseActivationStatusGet200Response".to_string()
+                })?,
         })
     }
 }
@@ -1366,14 +1099,22 @@ impl std::convert::TryFrom<HeaderValue>
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct FlunderBrowseGet200Response {
     #[serde(rename = "data")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub data: Option<Vec<models::FlunderBrowseGet200ResponseDataInner>>,
+    pub data: Vec<models::FlunderBrowseGet200ResponseDataInner>,
+
+    #[serde(rename = "additionalInfo")]
+    pub additional_info: String,
 }
 
 impl FlunderBrowseGet200Response {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> FlunderBrowseGet200Response {
-        FlunderBrowseGet200Response { data: None }
+    pub fn new(
+        data: Vec<models::FlunderBrowseGet200ResponseDataInner>,
+        additional_info: String,
+    ) -> FlunderBrowseGet200Response {
+        FlunderBrowseGet200Response {
+            data,
+            additional_info,
+        }
     }
 }
 
@@ -1384,7 +1125,8 @@ impl std::string::ToString for FlunderBrowseGet200Response {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
             // Skipping data in query parameter serialization
-
+            Some("additionalInfo".to_string()),
+            Some(self.additional_info.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -1403,6 +1145,7 @@ impl std::str::FromStr for FlunderBrowseGet200Response {
         #[allow(dead_code)]
         struct IntermediateRep {
             pub data: Vec<Vec<models::FlunderBrowseGet200ResponseDataInner>>,
+            pub additional_info: Vec<String>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -1425,6 +1168,8 @@ impl std::str::FromStr for FlunderBrowseGet200Response {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     "data" => return std::result::Result::Err("Parsing a container in this style is not supported in FlunderBrowseGet200Response".to_string()),
+                    #[allow(clippy::redundant_clone)]
+                    "additionalInfo" => intermediate_rep.additional_info.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     _ => return std::result::Result::Err("Unexpected key while parsing FlunderBrowseGet200Response".to_string())
                 }
             }
@@ -1435,7 +1180,18 @@ impl std::str::FromStr for FlunderBrowseGet200Response {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(FlunderBrowseGet200Response {
-            data: intermediate_rep.data.into_iter().next(),
+            data: intermediate_rep
+                .data
+                .into_iter()
+                .next()
+                .ok_or_else(|| "data missing in FlunderBrowseGet200Response".to_string())?,
+            additional_info: intermediate_rep
+                .additional_info
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "additionalInfo missing in FlunderBrowseGet200Response".to_string()
+                })?,
         })
     }
 }
@@ -1488,31 +1244,32 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<FlunderBrows
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct FlunderBrowseGet200ResponseDataInner {
-    #[serde(rename = "topic")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub topic: Option<String>,
+    #[serde(rename = "key")]
+    pub key: String,
 
     #[serde(rename = "value")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub value: Option<String>,
+    pub value: String,
 
     #[serde(rename = "encoding")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub encoding: Option<String>,
+    pub encoding: String,
 
     #[serde(rename = "timestamp")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub timestamp: Option<String>,
+    pub timestamp: String,
 }
 
 impl FlunderBrowseGet200ResponseDataInner {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> FlunderBrowseGet200ResponseDataInner {
+    pub fn new(
+        key: String,
+        value: String,
+        encoding: String,
+        timestamp: String,
+    ) -> FlunderBrowseGet200ResponseDataInner {
         FlunderBrowseGet200ResponseDataInner {
-            topic: None,
-            value: None,
-            encoding: None,
-            timestamp: None,
+            key,
+            value,
+            encoding,
+            timestamp,
         }
     }
 }
@@ -1523,18 +1280,14 @@ impl FlunderBrowseGet200ResponseDataInner {
 impl std::string::ToString for FlunderBrowseGet200ResponseDataInner {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.topic
-                .as_ref()
-                .map(|topic| ["topic".to_string(), topic.to_string()].join(",")),
-            self.value
-                .as_ref()
-                .map(|value| ["value".to_string(), value.to_string()].join(",")),
-            self.encoding
-                .as_ref()
-                .map(|encoding| ["encoding".to_string(), encoding.to_string()].join(",")),
-            self.timestamp
-                .as_ref()
-                .map(|timestamp| ["timestamp".to_string(), timestamp.to_string()].join(",")),
+            Some("key".to_string()),
+            Some(self.key.to_string()),
+            Some("value".to_string()),
+            Some(self.value.to_string()),
+            Some("encoding".to_string()),
+            Some(self.encoding.to_string()),
+            Some("timestamp".to_string()),
+            Some(self.timestamp.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -1552,7 +1305,7 @@ impl std::str::FromStr for FlunderBrowseGet200ResponseDataInner {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub topic: Vec<String>,
+            pub key: Vec<String>,
             pub value: Vec<String>,
             pub encoding: Vec<String>,
             pub timestamp: Vec<String>,
@@ -1579,7 +1332,7 @@ impl std::str::FromStr for FlunderBrowseGet200ResponseDataInner {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "topic" => intermediate_rep.topic.push(
+                    "key" => intermediate_rep.key.push(
                         <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
                     ),
                     #[allow(clippy::redundant_clone)]
@@ -1609,10 +1362,28 @@ impl std::str::FromStr for FlunderBrowseGet200ResponseDataInner {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(FlunderBrowseGet200ResponseDataInner {
-            topic: intermediate_rep.topic.into_iter().next(),
-            value: intermediate_rep.value.into_iter().next(),
-            encoding: intermediate_rep.encoding.into_iter().next(),
-            timestamp: intermediate_rep.timestamp.into_iter().next(),
+            key: intermediate_rep
+                .key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "key missing in FlunderBrowseGet200ResponseDataInner".to_string())?,
+            value: intermediate_rep.value.into_iter().next().ok_or_else(|| {
+                "value missing in FlunderBrowseGet200ResponseDataInner".to_string()
+            })?,
+            encoding: intermediate_rep
+                .encoding
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "encoding missing in FlunderBrowseGet200ResponseDataInner".to_string()
+                })?,
+            timestamp: intermediate_rep
+                .timestamp
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "timestamp missing in FlunderBrowseGet200ResponseDataInner".to_string()
+                })?,
         })
     }
 }
@@ -1665,30 +1436,51 @@ impl std::convert::TryFrom<HeaderValue>
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstalledApp {
     #[serde(rename = "appKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub app_key: Option<models::AppKey>,
+    pub app_key: models::AppKey,
 
     #[serde(rename = "status")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::AppStatus>,
+    pub status: models::AppStatus,
 
     #[serde(rename = "desired")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub desired: Option<models::AppStatus>,
+    pub desired: models::AppStatus,
+
+    #[serde(rename = "licenseKey")]
+    pub license_key: models::AppStatus,
+
+    #[serde(rename = "downloadToken")]
+    pub download_token: models::AppStatus,
 
     #[serde(rename = "installedSize")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub installed_size: Option<i32>,
+    pub installed_size: i32,
+
+    #[serde(rename = "multiInstance")]
+    pub multi_instance: bool,
+
+    #[serde(rename = "editor")]
+    pub editor: String,
 }
 
 impl InstalledApp {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstalledApp {
+    pub fn new(
+        app_key: models::AppKey,
+        status: models::AppStatus,
+        desired: models::AppStatus,
+        license_key: models::AppStatus,
+        download_token: models::AppStatus,
+        installed_size: i32,
+        multi_instance: bool,
+        editor: String,
+    ) -> InstalledApp {
         InstalledApp {
-            app_key: None,
-            status: None,
-            desired: None,
-            installed_size: None,
+            app_key,
+            status,
+            desired,
+            license_key,
+            download_token,
+            installed_size,
+            multi_instance,
+            editor,
         }
     }
 }
@@ -1704,9 +1496,16 @@ impl std::string::ToString for InstalledApp {
             // Skipping status in query parameter serialization
 
             // Skipping desired in query parameter serialization
-            self.installed_size.as_ref().map(|installed_size| {
-                ["installedSize".to_string(), installed_size.to_string()].join(",")
-            }),
+
+            // Skipping licenseKey in query parameter serialization
+
+            // Skipping downloadToken in query parameter serialization
+            Some("installedSize".to_string()),
+            Some(self.installed_size.to_string()),
+            Some("multiInstance".to_string()),
+            Some(self.multi_instance.to_string()),
+            Some("editor".to_string()),
+            Some(self.editor.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -1727,7 +1526,11 @@ impl std::str::FromStr for InstalledApp {
             pub app_key: Vec<models::AppKey>,
             pub status: Vec<models::AppStatus>,
             pub desired: Vec<models::AppStatus>,
+            pub license_key: Vec<models::AppStatus>,
+            pub download_token: Vec<models::AppStatus>,
             pub installed_size: Vec<i32>,
+            pub multi_instance: Vec<bool>,
+            pub editor: Vec<String>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -1765,8 +1568,26 @@ impl std::str::FromStr for InstalledApp {
                             .map_err(|x| x.to_string())?,
                     ),
                     #[allow(clippy::redundant_clone)]
+                    "licenseKey" => intermediate_rep.license_key.push(
+                        <models::AppStatus as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "downloadToken" => intermediate_rep.download_token.push(
+                        <models::AppStatus as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
                     "installedSize" => intermediate_rep.installed_size.push(
                         <i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "multiInstance" => intermediate_rep.multi_instance.push(
+                        <bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "editor" => intermediate_rep.editor.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
                     ),
                     _ => {
                         return std::result::Result::Err(
@@ -1782,10 +1603,46 @@ impl std::str::FromStr for InstalledApp {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(InstalledApp {
-            app_key: intermediate_rep.app_key.into_iter().next(),
-            status: intermediate_rep.status.into_iter().next(),
-            desired: intermediate_rep.desired.into_iter().next(),
-            installed_size: intermediate_rep.installed_size.into_iter().next(),
+            app_key: intermediate_rep
+                .app_key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "appKey missing in InstalledApp".to_string())?,
+            status: intermediate_rep
+                .status
+                .into_iter()
+                .next()
+                .ok_or_else(|| "status missing in InstalledApp".to_string())?,
+            desired: intermediate_rep
+                .desired
+                .into_iter()
+                .next()
+                .ok_or_else(|| "desired missing in InstalledApp".to_string())?,
+            license_key: intermediate_rep
+                .license_key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "licenseKey missing in InstalledApp".to_string())?,
+            download_token: intermediate_rep
+                .download_token
+                .into_iter()
+                .next()
+                .ok_or_else(|| "downloadToken missing in InstalledApp".to_string())?,
+            installed_size: intermediate_rep
+                .installed_size
+                .into_iter()
+                .next()
+                .ok_or_else(|| "installedSize missing in InstalledApp".to_string())?,
+            multi_instance: intermediate_rep
+                .multi_instance
+                .into_iter()
+                .next()
+                .ok_or_else(|| "multiInstance missing in InstalledApp".to_string())?,
+            editor: intermediate_rep
+                .editor
+                .into_iter()
+                .next()
+                .ok_or_else(|| "editor missing in InstalledApp".to_string())?,
         })
     }
 }
@@ -1837,48 +1694,768 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstalledApp
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceDetailConffile {
-    #[serde(rename = "container")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub container: Option<String>,
+pub struct InstanceConfig {
+    #[serde(rename = "networkAdapters")]
+    pub network_adapters: Vec<models::InstanceConfigNetworkAdapter>,
 
-    #[serde(rename = "host")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub host: Option<String>,
+    #[serde(rename = "devices")]
+    pub devices: models::InstanceConfigDevices,
 }
 
-impl InstanceDetailConffile {
+impl InstanceConfig {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailConffile {
-        InstanceDetailConffile {
-            container: None,
-            host: None,
+    pub fn new(
+        network_adapters: Vec<models::InstanceConfigNetworkAdapter>,
+        devices: models::InstanceConfigDevices,
+    ) -> InstanceConfig {
+        InstanceConfig {
+            network_adapters,
+            devices,
         }
     }
 }
 
-/// Converts the InstanceDetailConffile value to the Query Parameters representation (style=form, explode=false)
+/// Converts the InstanceConfig value to the Query Parameters representation (style=form, explode=false)
 /// specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceDetailConffile {
+impl std::string::ToString for InstanceConfig {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.container
-                .as_ref()
-                .map(|container| ["container".to_string(), container.to_string()].join(",")),
-            self.host
-                .as_ref()
-                .map(|host| ["host".to_string(), host.to_string()].join(",")),
+            // Skipping networkAdapters in query parameter serialization
+
+            // Skipping devices in query parameter serialization
+
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
 }
 
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailConffile value
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceConfig value
 /// as specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceDetailConffile {
+impl std::str::FromStr for InstanceConfig {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub network_adapters: Vec<Vec<models::InstanceConfigNetworkAdapter>>,
+            pub devices: Vec<models::InstanceConfigDevices>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing InstanceConfig".to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    "networkAdapters" => {
+                        return std::result::Result::Err(
+                            "Parsing a container in this style is not supported in InstanceConfig"
+                                .to_string(),
+                        )
+                    }
+                    #[allow(clippy::redundant_clone)]
+                    "devices" => intermediate_rep.devices.push(
+                        <models::InstanceConfigDevices as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing InstanceConfig".to_string(),
+                        )
+                    }
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(InstanceConfig {
+            network_adapters: intermediate_rep
+                .network_adapters
+                .into_iter()
+                .next()
+                .ok_or_else(|| "networkAdapters missing in InstanceConfig".to_string())?,
+            devices: intermediate_rep
+                .devices
+                .into_iter()
+                .next()
+                .ok_or_else(|| "devices missing in InstanceConfig".to_string())?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<InstanceConfig> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceConfig>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<InstanceConfig>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for InstanceConfig - value: {} is invalid {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceConfig> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+            std::result::Result::Ok(value) => {
+                match <InstanceConfig as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
+                    }
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into InstanceConfig - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstanceConfigDevices {
+    #[serde(rename = "usb")]
+    pub usb: Vec<models::InstanceConfigUsbDevice>,
+}
+
+impl InstanceConfigDevices {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(usb: Vec<models::InstanceConfigUsbDevice>) -> InstanceConfigDevices {
+        InstanceConfigDevices { usb }
+    }
+}
+
+/// Converts the InstanceConfigDevices value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for InstanceConfigDevices {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            // Skipping usb in query parameter serialization
+
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceConfigDevices value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for InstanceConfigDevices {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub usb: Vec<Vec<models::InstanceConfigUsbDevice>>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing InstanceConfigDevices".to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    "usb" => return std::result::Result::Err("Parsing a container in this style is not supported in InstanceConfigDevices".to_string()),
+                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceConfigDevices".to_string())
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(InstanceConfigDevices {
+            usb: intermediate_rep
+                .usb
+                .into_iter()
+                .next()
+                .ok_or_else(|| "usb missing in InstanceConfigDevices".to_string())?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<InstanceConfigDevices> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceConfigDevices>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<InstanceConfigDevices>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for InstanceConfigDevices - value: {} is invalid {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceConfigDevices> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+            std::result::Result::Ok(value) => {
+                match <InstanceConfigDevices as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
+                    }
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into InstanceConfigDevices - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstanceConfigNetworkAdapter {
+    #[serde(rename = "name")]
+    pub name: String,
+
+    #[serde(rename = "active")]
+    pub active: bool,
+
+    #[serde(rename = "connected")]
+    pub connected: bool,
+
+    #[serde(rename = "ipAddress")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ip_address: Option<String>,
+
+    #[serde(rename = "subnetMask")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub subnet_mask: Option<String>,
+
+    #[serde(rename = "gateway")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gateway: Option<String>,
+}
+
+impl InstanceConfigNetworkAdapter {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(name: String, active: bool, connected: bool) -> InstanceConfigNetworkAdapter {
+        InstanceConfigNetworkAdapter {
+            name,
+            active,
+            connected,
+            ip_address: None,
+            subnet_mask: None,
+            gateway: None,
+        }
+    }
+}
+
+/// Converts the InstanceConfigNetworkAdapter value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for InstanceConfigNetworkAdapter {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            Some("name".to_string()),
+            Some(self.name.to_string()),
+            Some("active".to_string()),
+            Some(self.active.to_string()),
+            Some("connected".to_string()),
+            Some(self.connected.to_string()),
+            self.ip_address
+                .as_ref()
+                .map(|ip_address| ["ipAddress".to_string(), ip_address.to_string()].join(",")),
+            self.subnet_mask
+                .as_ref()
+                .map(|subnet_mask| ["subnetMask".to_string(), subnet_mask.to_string()].join(",")),
+            self.gateway
+                .as_ref()
+                .map(|gateway| ["gateway".to_string(), gateway.to_string()].join(",")),
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceConfigNetworkAdapter value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for InstanceConfigNetworkAdapter {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub name: Vec<String>,
+            pub active: Vec<bool>,
+            pub connected: Vec<bool>,
+            pub ip_address: Vec<String>,
+            pub subnet_mask: Vec<String>,
+            pub gateway: Vec<String>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing InstanceConfigNetworkAdapter".to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    #[allow(clippy::redundant_clone)]
+                    "name" => intermediate_rep.name.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "active" => intermediate_rep.active.push(
+                        <bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "connected" => intermediate_rep.connected.push(
+                        <bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "ipAddress" => intermediate_rep.ip_address.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "subnetMask" => intermediate_rep.subnet_mask.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "gateway" => intermediate_rep.gateway.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing InstanceConfigNetworkAdapter".to_string(),
+                        )
+                    }
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(InstanceConfigNetworkAdapter {
+            name: intermediate_rep
+                .name
+                .into_iter()
+                .next()
+                .ok_or_else(|| "name missing in InstanceConfigNetworkAdapter".to_string())?,
+            active: intermediate_rep
+                .active
+                .into_iter()
+                .next()
+                .ok_or_else(|| "active missing in InstanceConfigNetworkAdapter".to_string())?,
+            connected: intermediate_rep
+                .connected
+                .into_iter()
+                .next()
+                .ok_or_else(|| "connected missing in InstanceConfigNetworkAdapter".to_string())?,
+            ip_address: intermediate_rep.ip_address.into_iter().next(),
+            subnet_mask: intermediate_rep.subnet_mask.into_iter().next(),
+            gateway: intermediate_rep.gateway.into_iter().next(),
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<InstanceConfigNetworkAdapter> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceConfigNetworkAdapter>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<InstanceConfigNetworkAdapter>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for InstanceConfigNetworkAdapter - value: {} is invalid {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceConfigNetworkAdapter> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+             std::result::Result::Ok(value) => {
+                    match <InstanceConfigNetworkAdapter as std::str::FromStr>::from_str(value) {
+                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
+                        std::result::Result::Err(err) => std::result::Result::Err(
+                            format!("Unable to convert header value '{}' into InstanceConfigNetworkAdapter - {}",
+                                value, err))
+                    }
+             },
+             std::result::Result::Err(e) => std::result::Result::Err(
+                 format!("Unable to convert header: {:?} to string: {}",
+                     hdr_value, e))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstanceConfigUsbDevice {
+    #[serde(rename = "device")]
+    pub device: String,
+
+    #[serde(rename = "pid")]
+    pub pid: i32,
+
+    #[serde(rename = "port")]
+    pub port: String,
+
+    #[serde(rename = "vendor")]
+    pub vendor: String,
+
+    #[serde(rename = "vid")]
+    pub vid: i32,
+
+    #[serde(rename = "active")]
+    pub active: bool,
+
+    #[serde(rename = "connected")]
+    pub connected: bool,
+}
+
+impl InstanceConfigUsbDevice {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(
+        device: String,
+        pid: i32,
+        port: String,
+        vendor: String,
+        vid: i32,
+        active: bool,
+        connected: bool,
+    ) -> InstanceConfigUsbDevice {
+        InstanceConfigUsbDevice {
+            device,
+            pid,
+            port,
+            vendor,
+            vid,
+            active,
+            connected,
+        }
+    }
+}
+
+/// Converts the InstanceConfigUsbDevice value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for InstanceConfigUsbDevice {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            Some("device".to_string()),
+            Some(self.device.to_string()),
+            Some("pid".to_string()),
+            Some(self.pid.to_string()),
+            Some("port".to_string()),
+            Some(self.port.to_string()),
+            Some("vendor".to_string()),
+            Some(self.vendor.to_string()),
+            Some("vid".to_string()),
+            Some(self.vid.to_string()),
+            Some("active".to_string()),
+            Some(self.active.to_string()),
+            Some("connected".to_string()),
+            Some(self.connected.to_string()),
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceConfigUsbDevice value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for InstanceConfigUsbDevice {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub device: Vec<String>,
+            pub pid: Vec<i32>,
+            pub port: Vec<String>,
+            pub vendor: Vec<String>,
+            pub vid: Vec<i32>,
+            pub active: Vec<bool>,
+            pub connected: Vec<bool>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing InstanceConfigUsbDevice".to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    #[allow(clippy::redundant_clone)]
+                    "device" => intermediate_rep.device.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "pid" => intermediate_rep.pid.push(
+                        <i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "port" => intermediate_rep.port.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "vendor" => intermediate_rep.vendor.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "vid" => intermediate_rep.vid.push(
+                        <i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "active" => intermediate_rep.active.push(
+                        <bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "connected" => intermediate_rep.connected.push(
+                        <bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing InstanceConfigUsbDevice".to_string(),
+                        )
+                    }
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(InstanceConfigUsbDevice {
+            device: intermediate_rep
+                .device
+                .into_iter()
+                .next()
+                .ok_or_else(|| "device missing in InstanceConfigUsbDevice".to_string())?,
+            pid: intermediate_rep
+                .pid
+                .into_iter()
+                .next()
+                .ok_or_else(|| "pid missing in InstanceConfigUsbDevice".to_string())?,
+            port: intermediate_rep
+                .port
+                .into_iter()
+                .next()
+                .ok_or_else(|| "port missing in InstanceConfigUsbDevice".to_string())?,
+            vendor: intermediate_rep
+                .vendor
+                .into_iter()
+                .next()
+                .ok_or_else(|| "vendor missing in InstanceConfigUsbDevice".to_string())?,
+            vid: intermediate_rep
+                .vid
+                .into_iter()
+                .next()
+                .ok_or_else(|| "vid missing in InstanceConfigUsbDevice".to_string())?,
+            active: intermediate_rep
+                .active
+                .into_iter()
+                .next()
+                .ok_or_else(|| "active missing in InstanceConfigUsbDevice".to_string())?,
+            connected: intermediate_rep
+                .connected
+                .into_iter()
+                .next()
+                .ok_or_else(|| "connected missing in InstanceConfigUsbDevice".to_string())?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<InstanceConfigUsbDevice> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceConfigUsbDevice>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<InstanceConfigUsbDevice>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for InstanceConfigUsbDevice - value: {} is invalid {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceConfigUsbDevice> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+            std::result::Result::Ok(value) => {
+                match <InstanceConfigUsbDevice as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
+                    }
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into InstanceConfigUsbDevice - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstanceDetailConfigFiles {
+    #[serde(rename = "container")]
+    pub container: String,
+
+    #[serde(rename = "host")]
+    pub host: String,
+}
+
+impl InstanceDetailConfigFiles {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(container: String, host: String) -> InstanceDetailConfigFiles {
+        InstanceDetailConfigFiles { container, host }
+    }
+}
+
+/// Converts the InstanceDetailConfigFiles value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for InstanceDetailConfigFiles {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            Some("container".to_string()),
+            Some(self.container.to_string()),
+            Some("host".to_string()),
+            Some(self.host.to_string()),
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailConfigFiles value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for InstanceDetailConfigFiles {
     type Err = String;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
@@ -1901,7 +2478,7 @@ impl std::str::FromStr for InstanceDetailConffile {
                 Some(x) => x,
                 None => {
                     return std::result::Result::Err(
-                        "Missing value while parsing InstanceDetailConffile".to_string(),
+                        "Missing value while parsing InstanceDetailConfigFiles".to_string(),
                     )
                 }
             };
@@ -1919,7 +2496,7 @@ impl std::str::FromStr for InstanceDetailConffile {
                     ),
                     _ => {
                         return std::result::Result::Err(
-                            "Unexpected key while parsing InstanceDetailConffile".to_string(),
+                            "Unexpected key while parsing InstanceDetailConfigFiles".to_string(),
                         )
                     }
                 }
@@ -1930,27 +2507,35 @@ impl std::str::FromStr for InstanceDetailConffile {
         }
 
         // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceDetailConffile {
-            container: intermediate_rep.container.into_iter().next(),
-            host: intermediate_rep.host.into_iter().next(),
+        std::result::Result::Ok(InstanceDetailConfigFiles {
+            container: intermediate_rep
+                .container
+                .into_iter()
+                .next()
+                .ok_or_else(|| "container missing in InstanceDetailConfigFiles".to_string())?,
+            host: intermediate_rep
+                .host
+                .into_iter()
+                .next()
+                .ok_or_else(|| "host missing in InstanceDetailConfigFiles".to_string())?,
         })
     }
 }
 
-// Methods for converting between header::IntoHeaderValue<InstanceDetailConffile> and HeaderValue
+// Methods for converting between header::IntoHeaderValue<InstanceDetailConfigFiles> and HeaderValue
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailConffile>> for HeaderValue {
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailConfigFiles>> for HeaderValue {
     type Error = String;
 
     fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceDetailConffile>,
+        hdr_value: header::IntoHeaderValue<InstanceDetailConfigFiles>,
     ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match HeaderValue::from_str(&hdr_value) {
             std::result::Result::Ok(value) => std::result::Result::Ok(value),
             std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for InstanceDetailConffile - value: {} is invalid {}",
+                "Invalid header value for InstanceDetailConfigFiles - value: {} is invalid {}",
                 hdr_value, e
             )),
         }
@@ -1958,18 +2543,18 @@ impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailConffile>> for 
 }
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailConffile> {
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailConfigFiles> {
     type Error = String;
 
     fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
             std::result::Result::Ok(value) => {
-                match <InstanceDetailConffile as std::str::FromStr>::from_str(value) {
+                match <InstanceDetailConfigFiles as std::str::FromStr>::from_str(value) {
                     std::result::Result::Ok(value) => {
                         std::result::Result::Ok(header::IntoHeaderValue(value))
                     }
                     std::result::Result::Err(err) => std::result::Result::Err(format!(
-                        "Unable to convert header value '{}' into InstanceDetailConffile - {}",
+                        "Unable to convert header value '{}' into InstanceDetailConfigFiles - {}",
                         value, err
                     )),
                 }
@@ -2086,14 +2671,13 @@ impl std::ops::DerefMut for InstanceDetailIpAddress {
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstanceDetailMounts {
     #[serde(rename = "mounts")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub mounts: Option<Vec<models::InstanceDetailMountsMountsInner>>,
+    pub mounts: Vec<models::InstanceDetailMountsMountsInner>,
 }
 
 impl InstanceDetailMounts {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailMounts {
-        InstanceDetailMounts { mounts: None }
+    pub fn new(mounts: Vec<models::InstanceDetailMountsMountsInner>) -> InstanceDetailMounts {
+        InstanceDetailMounts { mounts }
     }
 }
 
@@ -2155,7 +2739,11 @@ impl std::str::FromStr for InstanceDetailMounts {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(InstanceDetailMounts {
-            mounts: intermediate_rep.mounts.into_iter().next(),
+            mounts: intermediate_rep
+                .mounts
+                .into_iter()
+                .next()
+                .ok_or_else(|| "mounts missing in InstanceDetailMounts".to_string())?,
         })
     }
 }
@@ -2209,21 +2797,16 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDeta
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstanceDetailMountsMountsInner {
     #[serde(rename = "container")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub container: Option<String>,
+    pub container: String,
 
     #[serde(rename = "host")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub host: Option<String>,
+    pub host: String,
 }
 
 impl InstanceDetailMountsMountsInner {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailMountsMountsInner {
-        InstanceDetailMountsMountsInner {
-            container: None,
-            host: None,
-        }
+    pub fn new(container: String, host: String) -> InstanceDetailMountsMountsInner {
+        InstanceDetailMountsMountsInner { container, host }
     }
 }
 
@@ -2233,12 +2816,10 @@ impl InstanceDetailMountsMountsInner {
 impl std::string::ToString for InstanceDetailMountsMountsInner {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.container
-                .as_ref()
-                .map(|container| ["container".to_string(), container.to_string()].join(",")),
-            self.host
-                .as_ref()
-                .map(|host| ["host".to_string(), host.to_string()].join(",")),
+            Some("container".to_string()),
+            Some(self.container.to_string()),
+            Some("host".to_string()),
+            Some(self.host.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -2302,8 +2883,18 @@ impl std::str::FromStr for InstanceDetailMountsMountsInner {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(InstanceDetailMountsMountsInner {
-            container: intermediate_rep.container.into_iter().next(),
-            host: intermediate_rep.host.into_iter().next(),
+            container: intermediate_rep
+                .container
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "container missing in InstanceDetailMountsMountsInner".to_string()
+                })?,
+            host: intermediate_rep
+                .host
+                .into_iter()
+                .next()
+                .ok_or_else(|| "host missing in InstanceDetailMountsMountsInner".to_string())?,
         })
     }
 }
@@ -2352,182 +2943,43 @@ impl std::convert::TryFrom<HeaderValue>
     }
 }
 
-/// Allocated network ports of an instance
-
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceDetailPorts {
-    #[serde(rename = "ports")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ports: Option<Vec<models::InstanceDetailPortsPortsInner>>,
-}
-
-impl InstanceDetailPorts {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailPorts {
-        InstanceDetailPorts { ports: None }
-    }
-}
-
-/// Converts the InstanceDetailPorts value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceDetailPorts {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            // Skipping ports in query parameter serialization
-
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailPorts value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceDetailPorts {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub ports: Vec<Vec<models::InstanceDetailPortsPortsInner>>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing InstanceDetailPorts".to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    "ports" => return std::result::Result::Err(
-                        "Parsing a container in this style is not supported in InstanceDetailPorts"
-                            .to_string(),
-                    ),
-                    _ => {
-                        return std::result::Result::Err(
-                            "Unexpected key while parsing InstanceDetailPorts".to_string(),
-                        )
-                    }
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceDetailPorts {
-            ports: intermediate_rep.ports.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceDetailPorts> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailPorts>> for HeaderValue {
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceDetailPorts>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-            std::result::Result::Ok(value) => std::result::Result::Ok(value),
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for InstanceDetailPorts - value: {} is invalid {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailPorts> {
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-            std::result::Result::Ok(value) => {
-                match <InstanceDetailPorts as std::str::FromStr>::from_str(value) {
-                    std::result::Result::Ok(value) => {
-                        std::result::Result::Ok(header::IntoHeaderValue(value))
-                    }
-                    std::result::Result::Err(err) => std::result::Result::Err(format!(
-                        "Unable to convert header value '{}' into InstanceDetailPorts - {}",
-                        value, err
-                    )),
-                }
-            }
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Unable to convert header: {:?} to string: {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceDetailPortsPortsInner {
+pub struct InstanceDetailPort {
     #[serde(rename = "container")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub container: Option<String>,
+    pub container: String,
 
     #[serde(rename = "host")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub host: Option<String>,
+    pub host: String,
 }
 
-impl InstanceDetailPortsPortsInner {
+impl InstanceDetailPort {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailPortsPortsInner {
-        InstanceDetailPortsPortsInner {
-            container: None,
-            host: None,
-        }
+    pub fn new(container: String, host: String) -> InstanceDetailPort {
+        InstanceDetailPort { container, host }
     }
 }
 
-/// Converts the InstanceDetailPortsPortsInner value to the Query Parameters representation (style=form, explode=false)
+/// Converts the InstanceDetailPort value to the Query Parameters representation (style=form, explode=false)
 /// specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceDetailPortsPortsInner {
+impl std::string::ToString for InstanceDetailPort {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.container
-                .as_ref()
-                .map(|container| ["container".to_string(), container.to_string()].join(",")),
-            self.host
-                .as_ref()
-                .map(|host| ["host".to_string(), host.to_string()].join(",")),
+            Some("container".to_string()),
+            Some(self.container.to_string()),
+            Some("host".to_string()),
+            Some(self.host.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
 }
 
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailPortsPortsInner value
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailPort value
 /// as specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceDetailPortsPortsInner {
+impl std::str::FromStr for InstanceDetailPort {
     type Err = String;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
@@ -2550,7 +3002,7 @@ impl std::str::FromStr for InstanceDetailPortsPortsInner {
                 Some(x) => x,
                 None => {
                     return std::result::Result::Err(
-                        "Missing value while parsing InstanceDetailPortsPortsInner".to_string(),
+                        "Missing value while parsing InstanceDetailPort".to_string(),
                     )
                 }
             };
@@ -2568,8 +3020,7 @@ impl std::str::FromStr for InstanceDetailPortsPortsInner {
                     ),
                     _ => {
                         return std::result::Result::Err(
-                            "Unexpected key while parsing InstanceDetailPortsPortsInner"
-                                .to_string(),
+                            "Unexpected key while parsing InstanceDetailPort".to_string(),
                         )
                     }
                 }
@@ -2580,27 +3031,35 @@ impl std::str::FromStr for InstanceDetailPortsPortsInner {
         }
 
         // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceDetailPortsPortsInner {
-            container: intermediate_rep.container.into_iter().next(),
-            host: intermediate_rep.host.into_iter().next(),
+        std::result::Result::Ok(InstanceDetailPort {
+            container: intermediate_rep
+                .container
+                .into_iter()
+                .next()
+                .ok_or_else(|| "container missing in InstanceDetailPort".to_string())?,
+            host: intermediate_rep
+                .host
+                .into_iter()
+                .next()
+                .ok_or_else(|| "host missing in InstanceDetailPort".to_string())?,
         })
     }
 }
 
-// Methods for converting between header::IntoHeaderValue<InstanceDetailPortsPortsInner> and HeaderValue
+// Methods for converting between header::IntoHeaderValue<InstanceDetailPort> and HeaderValue
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailPortsPortsInner>> for HeaderValue {
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailPort>> for HeaderValue {
     type Error = String;
 
     fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceDetailPortsPortsInner>,
+        hdr_value: header::IntoHeaderValue<InstanceDetailPort>,
     ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match HeaderValue::from_str(&hdr_value) {
             std::result::Result::Ok(value) => std::result::Result::Ok(value),
             std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for InstanceDetailPortsPortsInner - value: {} is invalid {}",
+                "Invalid header value for InstanceDetailPort - value: {} is invalid {}",
                 hdr_value, e
             )),
         }
@@ -2608,139 +3067,18 @@ impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailPortsPortsInner
 }
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailPortsPortsInner> {
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceDetailPortsPortsInner as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceDetailPortsPortsInner - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-/// Automatic volumes of an instance
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceDetailVolumes {
-    #[serde(rename = "volumes")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub volumes: Option<Vec<models::InstanceDetailVolumesVolumesInner>>,
-}
-
-impl InstanceDetailVolumes {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailVolumes {
-        InstanceDetailVolumes { volumes: None }
-    }
-}
-
-/// Converts the InstanceDetailVolumes value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceDetailVolumes {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            // Skipping volumes in query parameter serialization
-
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailVolumes value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceDetailVolumes {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub volumes: Vec<Vec<models::InstanceDetailVolumesVolumesInner>>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing InstanceDetailVolumes".to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    "volumes" => return std::result::Result::Err("Parsing a container in this style is not supported in InstanceDetailVolumes".to_string()),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceDetailVolumes".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceDetailVolumes {
-            volumes: intermediate_rep.volumes.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceDetailVolumes> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailVolumes>> for HeaderValue {
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceDetailVolumes>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-            std::result::Result::Ok(value) => std::result::Result::Ok(value),
-            std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for InstanceDetailVolumes - value: {} is invalid {}",
-                hdr_value, e
-            )),
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailVolumes> {
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailPort> {
     type Error = String;
 
     fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
             std::result::Result::Ok(value) => {
-                match <InstanceDetailVolumes as std::str::FromStr>::from_str(value) {
+                match <InstanceDetailPort as std::str::FromStr>::from_str(value) {
                     std::result::Result::Ok(value) => {
                         std::result::Result::Ok(header::IntoHeaderValue(value))
                     }
                     std::result::Result::Err(err) => std::result::Result::Err(format!(
-                        "Unable to convert header value '{}' into InstanceDetailVolumes - {}",
+                        "Unable to convert header value '{}' into InstanceDetailPort - {}",
                         value, err
                     )),
                 }
@@ -2755,48 +3093,41 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDeta
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceDetailVolumesVolumesInner {
+pub struct InstanceDetailVolume {
     #[serde(rename = "name")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
+    pub name: String,
 
     #[serde(rename = "path")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub path: Option<String>,
+    pub path: String,
 }
 
-impl InstanceDetailVolumesVolumesInner {
+impl InstanceDetailVolume {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceDetailVolumesVolumesInner {
-        InstanceDetailVolumesVolumesInner {
-            name: None,
-            path: None,
-        }
+    pub fn new(name: String, path: String) -> InstanceDetailVolume {
+        InstanceDetailVolume { name, path }
     }
 }
 
-/// Converts the InstanceDetailVolumesVolumesInner value to the Query Parameters representation (style=form, explode=false)
+/// Converts the InstanceDetailVolume value to the Query Parameters representation (style=form, explode=false)
 /// specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceDetailVolumesVolumesInner {
+impl std::string::ToString for InstanceDetailVolume {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.name
-                .as_ref()
-                .map(|name| ["name".to_string(), name.to_string()].join(",")),
-            self.path
-                .as_ref()
-                .map(|path| ["path".to_string(), path.to_string()].join(",")),
+            Some("name".to_string()),
+            Some(self.name.to_string()),
+            Some("path".to_string()),
+            Some(self.path.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
 }
 
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailVolumesVolumesInner value
+/// Converts Query Parameters representation (style=form, explode=false) to a InstanceDetailVolume value
 /// as specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceDetailVolumesVolumesInner {
+impl std::str::FromStr for InstanceDetailVolume {
     type Err = String;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
@@ -2819,7 +3150,7 @@ impl std::str::FromStr for InstanceDetailVolumesVolumesInner {
                 Some(x) => x,
                 None => {
                     return std::result::Result::Err(
-                        "Missing value while parsing InstanceDetailVolumesVolumesInner".to_string(),
+                        "Missing value while parsing InstanceDetailVolume".to_string(),
                     )
                 }
             };
@@ -2837,8 +3168,7 @@ impl std::str::FromStr for InstanceDetailVolumesVolumesInner {
                     ),
                     _ => {
                         return std::result::Result::Err(
-                            "Unexpected key while parsing InstanceDetailVolumesVolumesInner"
-                                .to_string(),
+                            "Unexpected key while parsing InstanceDetailVolume".to_string(),
                         )
                     }
                 }
@@ -2849,53 +3179,62 @@ impl std::str::FromStr for InstanceDetailVolumesVolumesInner {
         }
 
         // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceDetailVolumesVolumesInner {
-            name: intermediate_rep.name.into_iter().next(),
-            path: intermediate_rep.path.into_iter().next(),
+        std::result::Result::Ok(InstanceDetailVolume {
+            name: intermediate_rep
+                .name
+                .into_iter()
+                .next()
+                .ok_or_else(|| "name missing in InstanceDetailVolume".to_string())?,
+            path: intermediate_rep
+                .path
+                .into_iter()
+                .next()
+                .ok_or_else(|| "path missing in InstanceDetailVolume".to_string())?,
         })
     }
 }
 
-// Methods for converting between header::IntoHeaderValue<InstanceDetailVolumesVolumesInner> and HeaderValue
+// Methods for converting between header::IntoHeaderValue<InstanceDetailVolume> and HeaderValue
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailVolumesVolumesInner>>
-    for HeaderValue
-{
+impl std::convert::TryFrom<header::IntoHeaderValue<InstanceDetailVolume>> for HeaderValue {
     type Error = String;
 
     fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceDetailVolumesVolumesInner>,
+        hdr_value: header::IntoHeaderValue<InstanceDetailVolume>,
     ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceDetailVolumesVolumesInner - value: {} is invalid {}",
-                     hdr_value, e))
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for InstanceDetailVolume - value: {} is invalid {}",
+                hdr_value, e
+            )),
         }
     }
 }
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceDetailVolumesVolumesInner>
-{
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstanceDetailVolume> {
     type Error = String;
 
     fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceDetailVolumesVolumesInner as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceDetailVolumesVolumesInner - {}",
-                                value, err))
+            std::result::Result::Ok(value) => {
+                match <InstanceDetailVolume as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
                     }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into InstanceDetailVolume - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
         }
     }
 }
@@ -2945,1143 +3284,6 @@ impl std::ops::Deref for InstanceId {
 impl std::ops::DerefMut for InstanceId {
     fn deref_mut(&mut self) -> &mut String {
         &mut self.0
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigGet200Response {
-    #[serde(rename = "networkAdapters")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub network_adapters:
-        Option<Vec<models::InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner>>,
-
-    #[serde(rename = "usbDevices")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub usb_devices: Option<Vec<models::InstanceInstanceIdConfigGet200ResponseUsbDevicesInner>>,
-}
-
-impl InstanceInstanceIdConfigGet200Response {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdConfigGet200Response {
-        InstanceInstanceIdConfigGet200Response {
-            network_adapters: None,
-            usb_devices: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdConfigGet200Response value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdConfigGet200Response {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            // Skipping networkAdapters in query parameter serialization
-
-            // Skipping usbDevices in query parameter serialization
-
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdConfigGet200Response value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdConfigGet200Response {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub network_adapters:
-                Vec<Vec<models::InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner>>,
-            pub usb_devices:
-                Vec<Vec<models::InstanceInstanceIdConfigGet200ResponseUsbDevicesInner>>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing InstanceInstanceIdConfigGet200Response"
-                            .to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    "networkAdapters" => return std::result::Result::Err("Parsing a container in this style is not supported in InstanceInstanceIdConfigGet200Response".to_string()),
-                    "usbDevices" => return std::result::Result::Err("Parsing a container in this style is not supported in InstanceInstanceIdConfigGet200Response".to_string()),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceInstanceIdConfigGet200Response".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdConfigGet200Response {
-            network_adapters: intermediate_rep.network_adapters.into_iter().next(),
-            usb_devices: intermediate_rep.usb_devices.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdConfigGet200Response> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceInstanceIdConfigGet200Response>>
-    for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceInstanceIdConfigGet200Response>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdConfigGet200Response - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdConfigGet200Response>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdConfigGet200Response as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdConfigGet200Response - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-    #[serde(rename = "name")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-
-    #[serde(rename = "active")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub active: Option<bool>,
-
-    #[serde(rename = "connected")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub connected: Option<bool>,
-
-    #[serde(rename = "ipAddress")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ip_address: Option<String>,
-
-    #[serde(rename = "subnetMask")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub subnet_mask: Option<String>,
-
-    #[serde(rename = "gateway")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub gateway: Option<String>,
-}
-
-impl InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-        InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-            name: None,
-            active: None,
-            connected: None,
-            ip_address: None,
-            subnet_mask: None,
-            gateway: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            self.name
-                .as_ref()
-                .map(|name| ["name".to_string(), name.to_string()].join(",")),
-            self.active
-                .as_ref()
-                .map(|active| ["active".to_string(), active.to_string()].join(",")),
-            self.connected
-                .as_ref()
-                .map(|connected| ["connected".to_string(), connected.to_string()].join(",")),
-            self.ip_address
-                .as_ref()
-                .map(|ip_address| ["ipAddress".to_string(), ip_address.to_string()].join(",")),
-            self.subnet_mask
-                .as_ref()
-                .map(|subnet_mask| ["subnetMask".to_string(), subnet_mask.to_string()].join(",")),
-            self.gateway
-                .as_ref()
-                .map(|gateway| ["gateway".to_string(), gateway.to_string()].join(",")),
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub name: Vec<String>,
-            pub active: Vec<bool>,
-            pub connected: Vec<bool>,
-            pub ip_address: Vec<String>,
-            pub subnet_mask: Vec<String>,
-            pub gateway: Vec<String>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner".to_string())
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "active" => intermediate_rep.active.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "connected" => intermediate_rep.connected.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "ipAddress" => intermediate_rep.ip_address.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "subnetMask" => intermediate_rep.subnet_mask.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "gateway" => intermediate_rep.gateway.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner {
-            name: intermediate_rep.name.into_iter().next(),
-            active: intermediate_rep.active.into_iter().next(),
-            connected: intermediate_rep.connected.into_iter().next(),
-            ip_address: intermediate_rep.ip_address.into_iter().next(),
-            subnet_mask: intermediate_rep.subnet_mask.into_iter().next(),
-            gateway: intermediate_rep.gateway.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner> and HeaderValue
-
-#[cfg(feature = "server")]
-impl
-    std::convert::TryFrom<
-        header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner>,
-    > for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<
-            InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner,
-        >,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdConfigGet200ResponseNetworkAdaptersInner - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-    #[serde(rename = "device")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub device: Option<String>,
-
-    #[serde(rename = "pid")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pid: Option<i32>,
-
-    #[serde(rename = "port")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub port: Option<String>,
-
-    #[serde(rename = "vendor")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub vendor: Option<String>,
-
-    #[serde(rename = "vid")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub vid: Option<i32>,
-
-    #[serde(rename = "active")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub active: Option<bool>,
-
-    #[serde(rename = "connected")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub connected: Option<bool>,
-}
-
-impl InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-        InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-            device: None,
-            pid: None,
-            port: None,
-            vendor: None,
-            vid: None,
-            active: None,
-            connected: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdConfigGet200ResponseUsbDevicesInner value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            self.device
-                .as_ref()
-                .map(|device| ["device".to_string(), device.to_string()].join(",")),
-            self.pid
-                .as_ref()
-                .map(|pid| ["pid".to_string(), pid.to_string()].join(",")),
-            self.port
-                .as_ref()
-                .map(|port| ["port".to_string(), port.to_string()].join(",")),
-            self.vendor
-                .as_ref()
-                .map(|vendor| ["vendor".to_string(), vendor.to_string()].join(",")),
-            self.vid
-                .as_ref()
-                .map(|vid| ["vid".to_string(), vid.to_string()].join(",")),
-            self.active
-                .as_ref()
-                .map(|active| ["active".to_string(), active.to_string()].join(",")),
-            self.connected
-                .as_ref()
-                .map(|connected| ["connected".to_string(), connected.to_string()].join(",")),
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdConfigGet200ResponseUsbDevicesInner value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub device: Vec<String>,
-            pub pid: Vec<i32>,
-            pub port: Vec<String>,
-            pub vendor: Vec<String>,
-            pub vid: Vec<i32>,
-            pub active: Vec<bool>,
-            pub connected: Vec<bool>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing InstanceInstanceIdConfigGet200ResponseUsbDevicesInner".to_string())
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "device" => intermediate_rep.device.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "pid" => intermediate_rep.pid.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "port" => intermediate_rep.port.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "vendor" => intermediate_rep.vendor.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "vid" => intermediate_rep.vid.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "active" => intermediate_rep.active.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "connected" => intermediate_rep.connected.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceInstanceIdConfigGet200ResponseUsbDevicesInner".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdConfigGet200ResponseUsbDevicesInner {
-            device: intermediate_rep.device.into_iter().next(),
-            pid: intermediate_rep.pid.into_iter().next(),
-            port: intermediate_rep.port.into_iter().next(),
-            vendor: intermediate_rep.vendor.into_iter().next(),
-            vid: intermediate_rep.vid.into_iter().next(),
-            active: intermediate_rep.active.into_iter().next(),
-            connected: intermediate_rep.connected.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseUsbDevicesInner> and HeaderValue
-
-#[cfg(feature = "server")]
-impl
-    std::convert::TryFrom<
-        header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseUsbDevicesInner>,
-    > for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseUsbDevicesInner>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdConfigGet200ResponseUsbDevicesInner - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdConfigGet200ResponseUsbDevicesInner>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdConfigGet200ResponseUsbDevicesInner as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdConfigGet200ResponseUsbDevicesInner - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigPostRequest {
-    #[serde(rename = "networkAdapters")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub network_adapters:
-        Option<Vec<models::InstanceInstanceIdConfigPostRequestNetworkAdaptersInner>>,
-
-    #[serde(rename = "usbDevices")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub usb_devices: Option<Vec<models::InstanceInstanceIdConfigPostRequestUsbDevicesInner>>,
-}
-
-impl InstanceInstanceIdConfigPostRequest {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdConfigPostRequest {
-        InstanceInstanceIdConfigPostRequest {
-            network_adapters: None,
-            usb_devices: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdConfigPostRequest value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdConfigPostRequest {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            // Skipping networkAdapters in query parameter serialization
-
-            // Skipping usbDevices in query parameter serialization
-
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdConfigPostRequest value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdConfigPostRequest {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub network_adapters:
-                Vec<Vec<models::InstanceInstanceIdConfigPostRequestNetworkAdaptersInner>>,
-            pub usb_devices: Vec<Vec<models::InstanceInstanceIdConfigPostRequestUsbDevicesInner>>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing InstanceInstanceIdConfigPostRequest"
-                            .to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    "networkAdapters" => return std::result::Result::Err("Parsing a container in this style is not supported in InstanceInstanceIdConfigPostRequest".to_string()),
-                    "usbDevices" => return std::result::Result::Err("Parsing a container in this style is not supported in InstanceInstanceIdConfigPostRequest".to_string()),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceInstanceIdConfigPostRequest".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdConfigPostRequest {
-            network_adapters: intermediate_rep.network_adapters.into_iter().next(),
-            usb_devices: intermediate_rep.usb_devices.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdConfigPostRequest> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceInstanceIdConfigPostRequest>>
-    for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceInstanceIdConfigPostRequest>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdConfigPostRequest - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdConfigPostRequest>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdConfigPostRequest as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdConfigPostRequest - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-    #[serde(rename = "name")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-
-    #[serde(rename = "active")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub active: Option<bool>,
-
-    #[serde(rename = "ipAddress")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ip_address: Option<String>,
-}
-
-impl InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-        InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-            name: None,
-            active: None,
-            ip_address: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdConfigPostRequestNetworkAdaptersInner value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            self.name
-                .as_ref()
-                .map(|name| ["name".to_string(), name.to_string()].join(",")),
-            self.active
-                .as_ref()
-                .map(|active| ["active".to_string(), active.to_string()].join(",")),
-            self.ip_address
-                .as_ref()
-                .map(|ip_address| ["ipAddress".to_string(), ip_address.to_string()].join(",")),
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdConfigPostRequestNetworkAdaptersInner value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub name: Vec<String>,
-            pub active: Vec<bool>,
-            pub ip_address: Vec<String>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing InstanceInstanceIdConfigPostRequestNetworkAdaptersInner".to_string())
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "name" => intermediate_rep.name.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "active" => intermediate_rep.active.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "ipAddress" => intermediate_rep.ip_address.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceInstanceIdConfigPostRequestNetworkAdaptersInner".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdConfigPostRequestNetworkAdaptersInner {
-            name: intermediate_rep.name.into_iter().next(),
-            active: intermediate_rep.active.into_iter().next(),
-            ip_address: intermediate_rep.ip_address.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestNetworkAdaptersInner> and HeaderValue
-
-#[cfg(feature = "server")]
-impl
-    std::convert::TryFrom<
-        header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestNetworkAdaptersInner>,
-    > for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestNetworkAdaptersInner>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdConfigPostRequestNetworkAdaptersInner - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestNetworkAdaptersInner>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdConfigPostRequestNetworkAdaptersInner as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdConfigPostRequestNetworkAdaptersInner - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-    #[serde(rename = "device")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub device: Option<String>,
-
-    #[serde(rename = "pid")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub pid: Option<i32>,
-
-    #[serde(rename = "port")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub port: Option<String>,
-
-    #[serde(rename = "vendor")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub vendor: Option<String>,
-
-    #[serde(rename = "vid")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub vid: Option<i32>,
-
-    #[serde(rename = "active")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub active: Option<bool>,
-}
-
-impl InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-        InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-            device: None,
-            pid: None,
-            port: None,
-            vendor: None,
-            vid: None,
-            active: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdConfigPostRequestUsbDevicesInner value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            self.device
-                .as_ref()
-                .map(|device| ["device".to_string(), device.to_string()].join(",")),
-            self.pid
-                .as_ref()
-                .map(|pid| ["pid".to_string(), pid.to_string()].join(",")),
-            self.port
-                .as_ref()
-                .map(|port| ["port".to_string(), port.to_string()].join(",")),
-            self.vendor
-                .as_ref()
-                .map(|vendor| ["vendor".to_string(), vendor.to_string()].join(",")),
-            self.vid
-                .as_ref()
-                .map(|vid| ["vid".to_string(), vid.to_string()].join(",")),
-            self.active
-                .as_ref()
-                .map(|active| ["active".to_string(), active.to_string()].join(",")),
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdConfigPostRequestUsbDevicesInner value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub device: Vec<String>,
-            pub pid: Vec<i32>,
-            pub port: Vec<String>,
-            pub vendor: Vec<String>,
-            pub vid: Vec<i32>,
-            pub active: Vec<bool>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => return std::result::Result::Err("Missing value while parsing InstanceInstanceIdConfigPostRequestUsbDevicesInner".to_string())
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "device" => intermediate_rep.device.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "pid" => intermediate_rep.pid.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "port" => intermediate_rep.port.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "vendor" => intermediate_rep.vendor.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "vid" => intermediate_rep.vid.push(<i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "active" => intermediate_rep.active.push(<bool as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    _ => return std::result::Result::Err("Unexpected key while parsing InstanceInstanceIdConfigPostRequestUsbDevicesInner".to_string())
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdConfigPostRequestUsbDevicesInner {
-            device: intermediate_rep.device.into_iter().next(),
-            pid: intermediate_rep.pid.into_iter().next(),
-            port: intermediate_rep.port.into_iter().next(),
-            vendor: intermediate_rep.vendor.into_iter().next(),
-            vid: intermediate_rep.vid.into_iter().next(),
-            active: intermediate_rep.active.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestUsbDevicesInner> and HeaderValue
-
-#[cfg(feature = "server")]
-impl
-    std::convert::TryFrom<
-        header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestUsbDevicesInner>,
-    > for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestUsbDevicesInner>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdConfigPostRequestUsbDevicesInner - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdConfigPostRequestUsbDevicesInner>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdConfigPostRequestUsbDevicesInner as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdConfigPostRequestUsbDevicesInner - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
-#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct InstanceInstanceIdLogsGet200Response {
-    #[serde(rename = "stdout")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub stdout: Option<String>,
-
-    #[serde(rename = "stderr")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub stderr: Option<String>,
-}
-
-impl InstanceInstanceIdLogsGet200Response {
-    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstanceInstanceIdLogsGet200Response {
-        InstanceInstanceIdLogsGet200Response {
-            stdout: None,
-            stderr: None,
-        }
-    }
-}
-
-/// Converts the InstanceInstanceIdLogsGet200Response value to the Query Parameters representation (style=form, explode=false)
-/// specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde serializer
-impl std::string::ToString for InstanceInstanceIdLogsGet200Response {
-    fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![
-            self.stdout
-                .as_ref()
-                .map(|stdout| ["stdout".to_string(), stdout.to_string()].join(",")),
-            self.stderr
-                .as_ref()
-                .map(|stderr| ["stderr".to_string(), stderr.to_string()].join(",")),
-        ];
-
-        params.into_iter().flatten().collect::<Vec<_>>().join(",")
-    }
-}
-
-/// Converts Query Parameters representation (style=form, explode=false) to a InstanceInstanceIdLogsGet200Response value
-/// as specified in https://swagger.io/docs/specification/serialization/
-/// Should be implemented in a serde deserializer
-impl std::str::FromStr for InstanceInstanceIdLogsGet200Response {
-    type Err = String;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        /// An intermediate representation of the struct to use for parsing.
-        #[derive(Default)]
-        #[allow(dead_code)]
-        struct IntermediateRep {
-            pub stdout: Vec<String>,
-            pub stderr: Vec<String>,
-        }
-
-        let mut intermediate_rep = IntermediateRep::default();
-
-        // Parse into intermediate representation
-        let mut string_iter = s.split(',');
-        let mut key_result = string_iter.next();
-
-        while key_result.is_some() {
-            let val = match string_iter.next() {
-                Some(x) => x,
-                None => {
-                    return std::result::Result::Err(
-                        "Missing value while parsing InstanceInstanceIdLogsGet200Response"
-                            .to_string(),
-                    )
-                }
-            };
-
-            if let Some(key) = key_result {
-                #[allow(clippy::match_single_binding)]
-                match key {
-                    #[allow(clippy::redundant_clone)]
-                    "stdout" => intermediate_rep.stdout.push(
-                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
-                    ),
-                    #[allow(clippy::redundant_clone)]
-                    "stderr" => intermediate_rep.stderr.push(
-                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
-                    ),
-                    _ => {
-                        return std::result::Result::Err(
-                            "Unexpected key while parsing InstanceInstanceIdLogsGet200Response"
-                                .to_string(),
-                        )
-                    }
-                }
-            }
-
-            // Get the next key
-            key_result = string_iter.next();
-        }
-
-        // Use the intermediate representation to return the struct
-        std::result::Result::Ok(InstanceInstanceIdLogsGet200Response {
-            stdout: intermediate_rep.stdout.into_iter().next(),
-            stderr: intermediate_rep.stderr.into_iter().next(),
-        })
-    }
-}
-
-// Methods for converting between header::IntoHeaderValue<InstanceInstanceIdLogsGet200Response> and HeaderValue
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<InstanceInstanceIdLogsGet200Response>>
-    for HeaderValue
-{
-    type Error = String;
-
-    fn try_from(
-        hdr_value: header::IntoHeaderValue<InstanceInstanceIdLogsGet200Response>,
-    ) -> std::result::Result<Self, Self::Error> {
-        let hdr_value = hdr_value.to_string();
-        match HeaderValue::from_str(&hdr_value) {
-             std::result::Result::Ok(value) => std::result::Result::Ok(value),
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Invalid header value for InstanceInstanceIdLogsGet200Response - value: {} is invalid {}",
-                     hdr_value, e))
-        }
-    }
-}
-
-#[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue>
-    for header::IntoHeaderValue<InstanceInstanceIdLogsGet200Response>
-{
-    type Error = String;
-
-    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
-        match hdr_value.to_str() {
-             std::result::Result::Ok(value) => {
-                    match <InstanceInstanceIdLogsGet200Response as std::str::FromStr>::from_str(value) {
-                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
-                        std::result::Result::Err(err) => std::result::Result::Err(
-                            format!("Unable to convert header value '{}' into InstanceInstanceIdLogsGet200Response - {}",
-                                value, err))
-                    }
-             },
-             std::result::Result::Err(e) => std::result::Result::Err(
-                 format!("Unable to convert header: {:?} to string: {}",
-                     hdr_value, e))
-        }
     }
 }
 
@@ -4199,8 +3401,7 @@ impl std::str::FromStr for InstanceStatus {
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstancesCreatePostRequest {
     #[serde(rename = "appKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub app_key: Option<models::AppKey>,
+    pub app_key: models::AppKey,
 
     /// Instance name
     #[serde(rename = "instanceName")]
@@ -4210,9 +3411,9 @@ pub struct InstancesCreatePostRequest {
 
 impl InstancesCreatePostRequest {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstancesCreatePostRequest {
+    pub fn new(app_key: models::AppKey) -> InstancesCreatePostRequest {
         InstancesCreatePostRequest {
-            app_key: None,
+            app_key,
             instance_name: None,
         }
     }
@@ -4291,7 +3492,11 @@ impl std::str::FromStr for InstancesCreatePostRequest {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(InstancesCreatePostRequest {
-            app_key: intermediate_rep.app_key.into_iter().next(),
+            app_key: intermediate_rep
+                .app_key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "appKey missing in InstancesCreatePostRequest".to_string())?,
             instance_name: intermediate_rep.instance_name.into_iter().next(),
         })
     }
@@ -4347,47 +3552,39 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<InstancesCre
 pub struct InstancesInstanceIdGet200Response {
     #[serde(rename = "instanceId")]
     #[validate(regex = "RE_INSTANCESINSTANCEIDGET200RESPONSE_INSTANCE_ID")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub instance_id: Option<String>,
+    pub instance_id: String,
 
     /// Instance name
     #[serde(rename = "instanceName")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub instance_name: Option<String>,
+    pub instance_name: String,
 
     #[serde(rename = "appKey")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub app_key: Option<models::AppKey>,
+    pub app_key: models::AppKey,
 
     #[serde(rename = "status")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::InstanceStatus>,
+    pub status: models::InstanceStatus,
 
     #[serde(rename = "desired")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub desired: Option<models::InstanceStatus>,
+    pub desired: models::InstanceStatus,
 
-    #[serde(rename = "conffiles")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub conffiles: Option<Vec<models::InstanceDetailConffile>>,
+    #[serde(rename = "configFiles")]
+    pub config_files: models::InstanceDetailConfigFiles,
 
     /// Hostname of an instance
     #[serde(rename = "hostname")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub hostname: Option<String>,
+    pub hostname: String,
 
     /// IP address of an instance
     #[serde(rename = "ipAddress")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ip_address: Option<String>,
+    pub ip_address: String,
 
+    /// Allocated network ports of an instance
     #[serde(rename = "ports")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ports: Option<models::InstanceDetailPorts>,
+    pub ports: Vec<models::InstanceDetailPort>,
 
+    /// Automatic volumes of an instance
     #[serde(rename = "volumes")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub volumes: Option<models::InstanceDetailVolumes>,
+    pub volumes: Vec<models::InstanceDetailVolume>,
 }
 
 lazy_static::lazy_static! {
@@ -4396,18 +3593,29 @@ lazy_static::lazy_static! {
 
 impl InstancesInstanceIdGet200Response {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstancesInstanceIdGet200Response {
+    pub fn new(
+        instance_id: String,
+        instance_name: String,
+        app_key: models::AppKey,
+        status: models::InstanceStatus,
+        desired: models::InstanceStatus,
+        config_files: models::InstanceDetailConfigFiles,
+        hostname: String,
+        ip_address: String,
+        ports: Vec<models::InstanceDetailPort>,
+        volumes: Vec<models::InstanceDetailVolume>,
+    ) -> InstancesInstanceIdGet200Response {
         InstancesInstanceIdGet200Response {
-            instance_id: None,
-            instance_name: None,
-            app_key: None,
-            status: None,
-            desired: None,
-            conffiles: None,
-            hostname: None,
-            ip_address: None,
-            ports: None,
-            volumes: None,
+            instance_id,
+            instance_name,
+            app_key,
+            status,
+            desired,
+            config_files,
+            hostname,
+            ip_address,
+            ports,
+            volumes,
         }
     }
 }
@@ -4418,25 +3626,21 @@ impl InstancesInstanceIdGet200Response {
 impl std::string::ToString for InstancesInstanceIdGet200Response {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.instance_id
-                .as_ref()
-                .map(|instance_id| ["instanceId".to_string(), instance_id.to_string()].join(",")),
-            self.instance_name.as_ref().map(|instance_name| {
-                ["instanceName".to_string(), instance_name.to_string()].join(",")
-            }),
+            Some("instanceId".to_string()),
+            Some(self.instance_id.to_string()),
+            Some("instanceName".to_string()),
+            Some(self.instance_name.to_string()),
             // Skipping appKey in query parameter serialization
 
             // Skipping status in query parameter serialization
 
             // Skipping desired in query parameter serialization
 
-            // Skipping conffiles in query parameter serialization
-            self.hostname
-                .as_ref()
-                .map(|hostname| ["hostname".to_string(), hostname.to_string()].join(",")),
-            self.ip_address
-                .as_ref()
-                .map(|ip_address| ["ipAddress".to_string(), ip_address.to_string()].join(",")),
+            // Skipping configFiles in query parameter serialization
+            Some("hostname".to_string()),
+            Some(self.hostname.to_string()),
+            Some("ipAddress".to_string()),
+            Some(self.ip_address.to_string()),
             // Skipping ports in query parameter serialization
 
             // Skipping volumes in query parameter serialization
@@ -4462,11 +3666,11 @@ impl std::str::FromStr for InstancesInstanceIdGet200Response {
             pub app_key: Vec<models::AppKey>,
             pub status: Vec<models::InstanceStatus>,
             pub desired: Vec<models::InstanceStatus>,
-            pub conffiles: Vec<Vec<models::InstanceDetailConffile>>,
+            pub config_files: Vec<models::InstanceDetailConfigFiles>,
             pub hostname: Vec<String>,
             pub ip_address: Vec<String>,
-            pub ports: Vec<models::InstanceDetailPorts>,
-            pub volumes: Vec<models::InstanceDetailVolumes>,
+            pub ports: Vec<Vec<models::InstanceDetailPort>>,
+            pub volumes: Vec<Vec<models::InstanceDetailVolume>>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -4498,15 +3702,14 @@ impl std::str::FromStr for InstancesInstanceIdGet200Response {
                     "status" => intermediate_rep.status.push(<models::InstanceStatus as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "desired" => intermediate_rep.desired.push(<models::InstanceStatus as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    "conffiles" => return std::result::Result::Err("Parsing a container in this style is not supported in InstancesInstanceIdGet200Response".to_string()),
+                    #[allow(clippy::redundant_clone)]
+                    "configFiles" => intermediate_rep.config_files.push(<models::InstanceDetailConfigFiles as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "hostname" => intermediate_rep.hostname.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
                     #[allow(clippy::redundant_clone)]
                     "ipAddress" => intermediate_rep.ip_address.push(<String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "ports" => intermediate_rep.ports.push(<models::InstanceDetailPorts as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
-                    #[allow(clippy::redundant_clone)]
-                    "volumes" => intermediate_rep.volumes.push(<models::InstanceDetailVolumes as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?),
+                    "ports" => return std::result::Result::Err("Parsing a container in this style is not supported in InstancesInstanceIdGet200Response".to_string()),
+                    "volumes" => return std::result::Result::Err("Parsing a container in this style is not supported in InstancesInstanceIdGet200Response".to_string()),
                     _ => return std::result::Result::Err("Unexpected key while parsing InstancesInstanceIdGet200Response".to_string())
                 }
             }
@@ -4517,16 +3720,62 @@ impl std::str::FromStr for InstancesInstanceIdGet200Response {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(InstancesInstanceIdGet200Response {
-            instance_id: intermediate_rep.instance_id.into_iter().next(),
-            instance_name: intermediate_rep.instance_name.into_iter().next(),
-            app_key: intermediate_rep.app_key.into_iter().next(),
-            status: intermediate_rep.status.into_iter().next(),
-            desired: intermediate_rep.desired.into_iter().next(),
-            conffiles: intermediate_rep.conffiles.into_iter().next(),
-            hostname: intermediate_rep.hostname.into_iter().next(),
-            ip_address: intermediate_rep.ip_address.into_iter().next(),
-            ports: intermediate_rep.ports.into_iter().next(),
-            volumes: intermediate_rep.volumes.into_iter().next(),
+            instance_id: intermediate_rep
+                .instance_id
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "instanceId missing in InstancesInstanceIdGet200Response".to_string()
+                })?,
+            instance_name: intermediate_rep
+                .instance_name
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "instanceName missing in InstancesInstanceIdGet200Response".to_string()
+                })?,
+            app_key: intermediate_rep
+                .app_key
+                .into_iter()
+                .next()
+                .ok_or_else(|| "appKey missing in InstancesInstanceIdGet200Response".to_string())?,
+            status: intermediate_rep
+                .status
+                .into_iter()
+                .next()
+                .ok_or_else(|| "status missing in InstancesInstanceIdGet200Response".to_string())?,
+            desired: intermediate_rep.desired.into_iter().next().ok_or_else(|| {
+                "desired missing in InstancesInstanceIdGet200Response".to_string()
+            })?,
+            config_files: intermediate_rep
+                .config_files
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "configFiles missing in InstancesInstanceIdGet200Response".to_string()
+                })?,
+            hostname: intermediate_rep
+                .hostname
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "hostname missing in InstancesInstanceIdGet200Response".to_string()
+                })?,
+            ip_address: intermediate_rep
+                .ip_address
+                .into_iter()
+                .next()
+                .ok_or_else(|| {
+                    "ipAddress missing in InstancesInstanceIdGet200Response".to_string()
+                })?,
+            ports: intermediate_rep
+                .ports
+                .into_iter()
+                .next()
+                .ok_or_else(|| "ports missing in InstancesInstanceIdGet200Response".to_string())?,
+            volumes: intermediate_rep.volumes.into_iter().next().ok_or_else(|| {
+                "volumes missing in InstancesInstanceIdGet200Response".to_string()
+            })?,
         })
     }
 }
@@ -4577,16 +3826,160 @@ impl std::convert::TryFrom<HeaderValue>
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct InstancesInstanceIdLogsGet200Response {
+    #[serde(rename = "stdout")]
+    pub stdout: String,
+
+    #[serde(rename = "stderr")]
+    pub stderr: String,
+}
+
+impl InstancesInstanceIdLogsGet200Response {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(stdout: String, stderr: String) -> InstancesInstanceIdLogsGet200Response {
+        InstancesInstanceIdLogsGet200Response { stdout, stderr }
+    }
+}
+
+/// Converts the InstancesInstanceIdLogsGet200Response value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for InstancesInstanceIdLogsGet200Response {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            Some("stdout".to_string()),
+            Some(self.stdout.to_string()),
+            Some("stderr".to_string()),
+            Some(self.stderr.to_string()),
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a InstancesInstanceIdLogsGet200Response value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for InstancesInstanceIdLogsGet200Response {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub stdout: Vec<String>,
+            pub stderr: Vec<String>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing InstancesInstanceIdLogsGet200Response"
+                            .to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    #[allow(clippy::redundant_clone)]
+                    "stdout" => intermediate_rep.stdout.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "stderr" => intermediate_rep.stderr.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing InstancesInstanceIdLogsGet200Response"
+                                .to_string(),
+                        )
+                    }
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(InstancesInstanceIdLogsGet200Response {
+            stdout: intermediate_rep.stdout.into_iter().next().ok_or_else(|| {
+                "stdout missing in InstancesInstanceIdLogsGet200Response".to_string()
+            })?,
+            stderr: intermediate_rep.stderr.into_iter().next().ok_or_else(|| {
+                "stderr missing in InstancesInstanceIdLogsGet200Response".to_string()
+            })?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<InstancesInstanceIdLogsGet200Response> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<InstancesInstanceIdLogsGet200Response>>
+    for HeaderValue
+{
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<InstancesInstanceIdLogsGet200Response>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+             std::result::Result::Ok(value) => std::result::Result::Ok(value),
+             std::result::Result::Err(e) => std::result::Result::Err(
+                 format!("Invalid header value for InstancesInstanceIdLogsGet200Response - value: {} is invalid {}",
+                     hdr_value, e))
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue>
+    for header::IntoHeaderValue<InstancesInstanceIdLogsGet200Response>
+{
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+             std::result::Result::Ok(value) => {
+                    match <InstancesInstanceIdLogsGet200Response as std::str::FromStr>::from_str(value) {
+                        std::result::Result::Ok(value) => std::result::Result::Ok(header::IntoHeaderValue(value)),
+                        std::result::Result::Err(err) => std::result::Result::Err(
+                            format!("Unable to convert header value '{}' into InstancesInstanceIdLogsGet200Response - {}",
+                                value, err))
+                    }
+             },
+             std::result::Result::Err(e) => std::result::Result::Err(
+                 format!("Unable to convert header: {:?} to string: {}",
+                     hdr_value, e))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct InstancesInstanceIdPatchRequest {
     #[serde(rename = "to")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub to: Option<String>,
+    pub to: String,
 }
 
 impl InstancesInstanceIdPatchRequest {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> InstancesInstanceIdPatchRequest {
-        InstancesInstanceIdPatchRequest { to: None }
+    pub fn new(to: String) -> InstancesInstanceIdPatchRequest {
+        InstancesInstanceIdPatchRequest { to }
     }
 }
 
@@ -4595,10 +3988,7 @@ impl InstancesInstanceIdPatchRequest {
 /// Should be implemented in a serde serializer
 impl std::string::ToString for InstancesInstanceIdPatchRequest {
     fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![self
-            .to
-            .as_ref()
-            .map(|to| ["to".to_string(), to.to_string()].join(","))];
+        let params: Vec<Option<String>> = vec![Some("to".to_string()), Some(self.to.to_string())];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
@@ -4656,7 +4046,11 @@ impl std::str::FromStr for InstancesInstanceIdPatchRequest {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(InstancesInstanceIdPatchRequest {
-            to: intermediate_rep.to.into_iter().next(),
+            to: intermediate_rep
+                .to
+                .into_iter()
+                .next()
+                .ok_or_else(|| "to missing in InstancesInstanceIdPatchRequest".to_string())?,
         })
     }
 }
@@ -4710,40 +4104,41 @@ impl std::convert::TryFrom<HeaderValue>
 pub struct Job {
     #[serde(rename = "id")]
     #[validate(range(min = 1, max = 4294967295))]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub id: Option<u32>,
+    pub id: u32,
 
     #[serde(rename = "status")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub status: Option<models::JobStatus>,
+    pub status: models::JobStatus,
 
     #[serde(rename = "description")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    pub description: String,
 
     #[serde(rename = "numSteps")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub num_steps: Option<i32>,
+    pub num_steps: i32,
 
     #[serde(rename = "currentStep")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub current_step: Option<models::JobStep>,
+    pub current_step: models::JobStep,
 
     #[serde(rename = "result")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub result: Option<models::JobResult>,
+    pub result: models::JobResult,
 }
 
 impl Job {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> Job {
+    pub fn new(
+        id: u32,
+        status: models::JobStatus,
+        description: String,
+        num_steps: i32,
+        current_step: models::JobStep,
+        result: models::JobResult,
+    ) -> Job {
         Job {
-            id: None,
-            status: None,
-            description: None,
-            num_steps: None,
-            current_step: None,
-            result: None,
+            id,
+            status,
+            description,
+            num_steps,
+            current_step,
+            result,
         }
     }
 }
@@ -4754,16 +4149,13 @@ impl Job {
 impl std::string::ToString for Job {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.id
-                .as_ref()
-                .map(|id| ["id".to_string(), id.to_string()].join(",")),
+            Some("id".to_string()),
+            Some(self.id.to_string()),
             // Skipping status in query parameter serialization
-            self.description
-                .as_ref()
-                .map(|description| ["description".to_string(), description.to_string()].join(",")),
-            self.num_steps
-                .as_ref()
-                .map(|num_steps| ["numSteps".to_string(), num_steps.to_string()].join(",")),
+            Some("description".to_string()),
+            Some(self.description.to_string()),
+            Some("numSteps".to_string()),
+            Some(self.num_steps.to_string()),
             // Skipping currentStep in query parameter serialization
 
             // Skipping result in query parameter serialization
@@ -4850,12 +4242,36 @@ impl std::str::FromStr for Job {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(Job {
-            id: intermediate_rep.id.into_iter().next(),
-            status: intermediate_rep.status.into_iter().next(),
-            description: intermediate_rep.description.into_iter().next(),
-            num_steps: intermediate_rep.num_steps.into_iter().next(),
-            current_step: intermediate_rep.current_step.into_iter().next(),
-            result: intermediate_rep.result.into_iter().next(),
+            id: intermediate_rep
+                .id
+                .into_iter()
+                .next()
+                .ok_or_else(|| "id missing in Job".to_string())?,
+            status: intermediate_rep
+                .status
+                .into_iter()
+                .next()
+                .ok_or_else(|| "status missing in Job".to_string())?,
+            description: intermediate_rep
+                .description
+                .into_iter()
+                .next()
+                .ok_or_else(|| "description missing in Job".to_string())?,
+            num_steps: intermediate_rep
+                .num_steps
+                .into_iter()
+                .next()
+                .ok_or_else(|| "numSteps missing in Job".to_string())?,
+            current_step: intermediate_rep
+                .current_step
+                .into_iter()
+                .next()
+                .ok_or_else(|| "currentStep missing in Job".to_string())?,
+            result: intermediate_rep
+                .result
+                .into_iter()
+                .next()
+                .ok_or_else(|| "result missing in Job".to_string())?,
         })
     }
 }
@@ -4942,14 +4358,13 @@ impl std::ops::DerefMut for JobId {
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct JobMeta {
     #[serde(rename = "jobId")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub job_id: Option<i32>,
+    pub job_id: i32,
 }
 
 impl JobMeta {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> JobMeta {
-        JobMeta { job_id: None }
+    pub fn new(job_id: i32) -> JobMeta {
+        JobMeta { job_id }
     }
 }
 
@@ -4958,10 +4373,8 @@ impl JobMeta {
 /// Should be implemented in a serde serializer
 impl std::string::ToString for JobMeta {
     fn to_string(&self) -> String {
-        let params: Vec<Option<String>> = vec![self
-            .job_id
-            .as_ref()
-            .map(|job_id| ["jobId".to_string(), job_id.to_string()].join(","))];
+        let params: Vec<Option<String>> =
+            vec![Some("jobId".to_string()), Some(self.job_id.to_string())];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
@@ -5018,7 +4431,11 @@ impl std::str::FromStr for JobMeta {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(JobMeta {
-            job_id: intermediate_rep.job_id.into_iter().next(),
+            job_id: intermediate_rep
+                .job_id
+                .into_iter()
+                .next()
+                .ok_or_else(|| "jobId missing in JobMeta".to_string())?,
         })
     }
 }
@@ -5071,22 +4488,17 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<JobMeta> {
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct JobResult {
-    #[serde(rename = "exit_code")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub exit_code: Option<i32>,
+    #[serde(rename = "code")]
+    pub code: i32,
 
     #[serde(rename = "message")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub message: Option<String>,
+    pub message: String,
 }
 
 impl JobResult {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> JobResult {
-        JobResult {
-            exit_code: None,
-            message: None,
-        }
+    pub fn new(code: i32, message: String) -> JobResult {
+        JobResult { code, message }
     }
 }
 
@@ -5096,12 +4508,10 @@ impl JobResult {
 impl std::string::ToString for JobResult {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.exit_code
-                .as_ref()
-                .map(|exit_code| ["exit_code".to_string(), exit_code.to_string()].join(",")),
-            self.message
-                .as_ref()
-                .map(|message| ["message".to_string(), message.to_string()].join(",")),
+            Some("code".to_string()),
+            Some(self.code.to_string()),
+            Some("message".to_string()),
+            Some(self.message.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -5119,7 +4529,7 @@ impl std::str::FromStr for JobResult {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub exit_code: Vec<i32>,
+            pub code: Vec<i32>,
             pub message: Vec<String>,
         }
 
@@ -5143,7 +4553,7 @@ impl std::str::FromStr for JobResult {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "exit_code" => intermediate_rep.exit_code.push(
+                    "code" => intermediate_rep.code.push(
                         <i32 as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
                     ),
                     #[allow(clippy::redundant_clone)]
@@ -5164,8 +4574,16 @@ impl std::str::FromStr for JobResult {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(JobResult {
-            exit_code: intermediate_rep.exit_code.into_iter().next(),
-            message: intermediate_rep.message.into_iter().next(),
+            code: intermediate_rep
+                .code
+                .into_iter()
+                .next()
+                .ok_or_else(|| "code missing in JobResult".to_string())?,
+            message: intermediate_rep
+                .message
+                .into_iter()
+                .next()
+                .ok_or_else(|| "message missing in JobResult".to_string())?,
         })
     }
 }
@@ -5276,40 +4694,41 @@ impl std::str::FromStr for JobStatus {
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct JobStep {
     #[serde(rename = "description")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
+    pub description: String,
 
     #[serde(rename = "num")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub num: Option<i32>,
+    pub num: i32,
 
     #[serde(rename = "unit")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub unit: Option<i32>,
+    pub unit: i32,
 
     #[serde(rename = "unitsTotal")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub units_total: Option<i32>,
+    pub units_total: i32,
 
     #[serde(rename = "unitsDone")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub units_done: Option<i32>,
+    pub units_done: i32,
 
     #[serde(rename = "rate")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub rate: Option<i32>,
+    pub rate: i32,
 }
 
 impl JobStep {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> JobStep {
+    pub fn new(
+        description: String,
+        num: i32,
+        unit: i32,
+        units_total: i32,
+        units_done: i32,
+        rate: i32,
+    ) -> JobStep {
         JobStep {
-            description: None,
-            num: None,
-            unit: None,
-            units_total: None,
-            units_done: None,
-            rate: None,
+            description,
+            num,
+            unit,
+            units_total,
+            units_done,
+            rate,
         }
     }
 }
@@ -5320,24 +4739,18 @@ impl JobStep {
 impl std::string::ToString for JobStep {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.description
-                .as_ref()
-                .map(|description| ["description".to_string(), description.to_string()].join(",")),
-            self.num
-                .as_ref()
-                .map(|num| ["num".to_string(), num.to_string()].join(",")),
-            self.unit
-                .as_ref()
-                .map(|unit| ["unit".to_string(), unit.to_string()].join(",")),
-            self.units_total
-                .as_ref()
-                .map(|units_total| ["unitsTotal".to_string(), units_total.to_string()].join(",")),
-            self.units_done
-                .as_ref()
-                .map(|units_done| ["unitsDone".to_string(), units_done.to_string()].join(",")),
-            self.rate
-                .as_ref()
-                .map(|rate| ["rate".to_string(), rate.to_string()].join(",")),
+            Some("description".to_string()),
+            Some(self.description.to_string()),
+            Some("num".to_string()),
+            Some(self.num.to_string()),
+            Some("unit".to_string()),
+            Some(self.unit.to_string()),
+            Some("unitsTotal".to_string()),
+            Some(self.units_total.to_string()),
+            Some("unitsDone".to_string()),
+            Some(self.units_done.to_string()),
+            Some("rate".to_string()),
+            Some(self.rate.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -5420,12 +4833,36 @@ impl std::str::FromStr for JobStep {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(JobStep {
-            description: intermediate_rep.description.into_iter().next(),
-            num: intermediate_rep.num.into_iter().next(),
-            unit: intermediate_rep.unit.into_iter().next(),
-            units_total: intermediate_rep.units_total.into_iter().next(),
-            units_done: intermediate_rep.units_done.into_iter().next(),
-            rate: intermediate_rep.rate.into_iter().next(),
+            description: intermediate_rep
+                .description
+                .into_iter()
+                .next()
+                .ok_or_else(|| "description missing in JobStep".to_string())?,
+            num: intermediate_rep
+                .num
+                .into_iter()
+                .next()
+                .ok_or_else(|| "num missing in JobStep".to_string())?,
+            unit: intermediate_rep
+                .unit
+                .into_iter()
+                .next()
+                .ok_or_else(|| "unit missing in JobStep".to_string())?,
+            units_total: intermediate_rep
+                .units_total
+                .into_iter()
+                .next()
+                .ok_or_else(|| "unitsTotal missing in JobStep".to_string())?,
+            units_done: intermediate_rep
+                .units_done
+                .into_iter()
+                .next()
+                .ok_or_else(|| "unitsDone missing in JobStep".to_string())?,
+            rate: intermediate_rep
+                .rate
+                .into_iter()
+                .next()
+                .ok_or_else(|| "rate missing in JobStep".to_string())?,
         })
     }
 }
@@ -5526,39 +4963,56 @@ impl std::ops::DerefMut for LicenseKey {
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
-pub struct SystemPingGet200Response {
-    #[serde(rename = "additionalInfo")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub additional_info: Option<String>,
+pub struct SystemDistro {
+    #[serde(rename = "codename")]
+    pub codename: String,
+
+    #[serde(rename = "id")]
+    pub id: String,
+
+    #[serde(rename = "name")]
+    pub name: String,
+
+    #[serde(rename = "version")]
+    pub version: String,
 }
 
-impl SystemPingGet200Response {
+impl SystemDistro {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> SystemPingGet200Response {
-        SystemPingGet200Response {
-            additional_info: None,
+    pub fn new(codename: String, id: String, name: String, version: String) -> SystemDistro {
+        SystemDistro {
+            codename,
+            id,
+            name,
+            version,
         }
     }
 }
 
-/// Converts the SystemPingGet200Response value to the Query Parameters representation (style=form, explode=false)
+/// Converts the SystemDistro value to the Query Parameters representation (style=form, explode=false)
 /// specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde serializer
-impl std::string::ToString for SystemPingGet200Response {
+impl std::string::ToString for SystemDistro {
     fn to_string(&self) -> String {
-        let params: Vec<Option<String>> =
-            vec![self.additional_info.as_ref().map(|additional_info| {
-                ["additionalInfo".to_string(), additional_info.to_string()].join(",")
-            })];
+        let params: Vec<Option<String>> = vec![
+            Some("codename".to_string()),
+            Some(self.codename.to_string()),
+            Some("id".to_string()),
+            Some(self.id.to_string()),
+            Some("name".to_string()),
+            Some(self.name.to_string()),
+            Some("version".to_string()),
+            Some(self.version.to_string()),
+        ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
     }
 }
 
-/// Converts Query Parameters representation (style=form, explode=false) to a SystemPingGet200Response value
+/// Converts Query Parameters representation (style=form, explode=false) to a SystemDistro value
 /// as specified in https://swagger.io/docs/specification/serialization/
 /// Should be implemented in a serde deserializer
-impl std::str::FromStr for SystemPingGet200Response {
+impl std::str::FromStr for SystemDistro {
     type Err = String;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
@@ -5566,7 +5020,10 @@ impl std::str::FromStr for SystemPingGet200Response {
         #[derive(Default)]
         #[allow(dead_code)]
         struct IntermediateRep {
-            pub additional_info: Vec<String>,
+            pub codename: Vec<String>,
+            pub id: Vec<String>,
+            pub name: Vec<String>,
+            pub version: Vec<String>,
         }
 
         let mut intermediate_rep = IntermediateRep::default();
@@ -5580,7 +5037,7 @@ impl std::str::FromStr for SystemPingGet200Response {
                 Some(x) => x,
                 None => {
                     return std::result::Result::Err(
-                        "Missing value while parsing SystemPingGet200Response".to_string(),
+                        "Missing value while parsing SystemDistro".to_string(),
                     )
                 }
             };
@@ -5589,12 +5046,24 @@ impl std::str::FromStr for SystemPingGet200Response {
                 #[allow(clippy::match_single_binding)]
                 match key {
                     #[allow(clippy::redundant_clone)]
-                    "additionalInfo" => intermediate_rep.additional_info.push(
+                    "codename" => intermediate_rep.codename.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "id" => intermediate_rep.id.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "name" => intermediate_rep.name.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "version" => intermediate_rep.version.push(
                         <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
                     ),
                     _ => {
                         return std::result::Result::Err(
-                            "Unexpected key while parsing SystemPingGet200Response".to_string(),
+                            "Unexpected key while parsing SystemDistro".to_string(),
                         )
                     }
                 }
@@ -5605,26 +5074,45 @@ impl std::str::FromStr for SystemPingGet200Response {
         }
 
         // Use the intermediate representation to return the struct
-        std::result::Result::Ok(SystemPingGet200Response {
-            additional_info: intermediate_rep.additional_info.into_iter().next(),
+        std::result::Result::Ok(SystemDistro {
+            codename: intermediate_rep
+                .codename
+                .into_iter()
+                .next()
+                .ok_or_else(|| "codename missing in SystemDistro".to_string())?,
+            id: intermediate_rep
+                .id
+                .into_iter()
+                .next()
+                .ok_or_else(|| "id missing in SystemDistro".to_string())?,
+            name: intermediate_rep
+                .name
+                .into_iter()
+                .next()
+                .ok_or_else(|| "name missing in SystemDistro".to_string())?,
+            version: intermediate_rep
+                .version
+                .into_iter()
+                .next()
+                .ok_or_else(|| "version missing in SystemDistro".to_string())?,
         })
     }
 }
 
-// Methods for converting between header::IntoHeaderValue<SystemPingGet200Response> and HeaderValue
+// Methods for converting between header::IntoHeaderValue<SystemDistro> and HeaderValue
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<header::IntoHeaderValue<SystemPingGet200Response>> for HeaderValue {
+impl std::convert::TryFrom<header::IntoHeaderValue<SystemDistro>> for HeaderValue {
     type Error = String;
 
     fn try_from(
-        hdr_value: header::IntoHeaderValue<SystemPingGet200Response>,
+        hdr_value: header::IntoHeaderValue<SystemDistro>,
     ) -> std::result::Result<Self, Self::Error> {
         let hdr_value = hdr_value.to_string();
         match HeaderValue::from_str(&hdr_value) {
             std::result::Result::Ok(value) => std::result::Result::Ok(value),
             std::result::Result::Err(e) => std::result::Result::Err(format!(
-                "Invalid header value for SystemPingGet200Response - value: {} is invalid {}",
+                "Invalid header value for SystemDistro - value: {} is invalid {}",
                 hdr_value, e
             )),
         }
@@ -5632,18 +5120,374 @@ impl std::convert::TryFrom<header::IntoHeaderValue<SystemPingGet200Response>> fo
 }
 
 #[cfg(feature = "server")]
-impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<SystemPingGet200Response> {
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<SystemDistro> {
     type Error = String;
 
     fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
         match hdr_value.to_str() {
             std::result::Result::Ok(value) => {
-                match <SystemPingGet200Response as std::str::FromStr>::from_str(value) {
+                match <SystemDistro as std::str::FromStr>::from_str(value) {
                     std::result::Result::Ok(value) => {
                         std::result::Result::Ok(header::IntoHeaderValue(value))
                     }
                     std::result::Result::Err(err) => std::result::Result::Err(format!(
-                        "Unable to convert header value '{}' into SystemPingGet200Response - {}",
+                        "Unable to convert header value '{}' into SystemDistro - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct SystemInfo {
+    #[serde(rename = "arch")]
+    pub arch: String,
+
+    #[serde(rename = "distro")]
+    pub distro: models::SystemDistro,
+
+    #[serde(rename = "kernel")]
+    pub kernel: models::SystemKernel,
+
+    #[serde(rename = "platform")]
+    pub platform: String,
+}
+
+impl SystemInfo {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(
+        arch: String,
+        distro: models::SystemDistro,
+        kernel: models::SystemKernel,
+        platform: String,
+    ) -> SystemInfo {
+        SystemInfo {
+            arch,
+            distro,
+            kernel,
+            platform,
+        }
+    }
+}
+
+/// Converts the SystemInfo value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for SystemInfo {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            Some("arch".to_string()),
+            Some(self.arch.to_string()),
+            // Skipping distro in query parameter serialization
+
+            // Skipping kernel in query parameter serialization
+            Some("platform".to_string()),
+            Some(self.platform.to_string()),
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a SystemInfo value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for SystemInfo {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub arch: Vec<String>,
+            pub distro: Vec<models::SystemDistro>,
+            pub kernel: Vec<models::SystemKernel>,
+            pub platform: Vec<String>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing SystemInfo".to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    #[allow(clippy::redundant_clone)]
+                    "arch" => intermediate_rep.arch.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "distro" => intermediate_rep.distro.push(
+                        <models::SystemDistro as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "kernel" => intermediate_rep.kernel.push(
+                        <models::SystemKernel as std::str::FromStr>::from_str(val)
+                            .map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "platform" => intermediate_rep.platform.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing SystemInfo".to_string(),
+                        )
+                    }
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(SystemInfo {
+            arch: intermediate_rep
+                .arch
+                .into_iter()
+                .next()
+                .ok_or_else(|| "arch missing in SystemInfo".to_string())?,
+            distro: intermediate_rep
+                .distro
+                .into_iter()
+                .next()
+                .ok_or_else(|| "distro missing in SystemInfo".to_string())?,
+            kernel: intermediate_rep
+                .kernel
+                .into_iter()
+                .next()
+                .ok_or_else(|| "kernel missing in SystemInfo".to_string())?,
+            platform: intermediate_rep
+                .platform
+                .into_iter()
+                .next()
+                .ok_or_else(|| "platform missing in SystemInfo".to_string())?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<SystemInfo> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<SystemInfo>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<SystemInfo>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for SystemInfo - value: {} is invalid {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<SystemInfo> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+            std::result::Result::Ok(value) => {
+                match <SystemInfo as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
+                    }
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into SystemInfo - {}",
+                        value, err
+                    )),
+                }
+            }
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Unable to convert header: {:?} to string: {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize, validator::Validate)]
+#[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
+pub struct SystemKernel {
+    #[serde(rename = "build")]
+    pub build: String,
+
+    #[serde(rename = "machine")]
+    pub machine: String,
+
+    #[serde(rename = "version")]
+    pub version: String,
+}
+
+impl SystemKernel {
+    #[allow(clippy::new_without_default, clippy::too_many_arguments)]
+    pub fn new(build: String, machine: String, version: String) -> SystemKernel {
+        SystemKernel {
+            build,
+            machine,
+            version,
+        }
+    }
+}
+
+/// Converts the SystemKernel value to the Query Parameters representation (style=form, explode=false)
+/// specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde serializer
+impl std::string::ToString for SystemKernel {
+    fn to_string(&self) -> String {
+        let params: Vec<Option<String>> = vec![
+            Some("build".to_string()),
+            Some(self.build.to_string()),
+            Some("machine".to_string()),
+            Some(self.machine.to_string()),
+            Some("version".to_string()),
+            Some(self.version.to_string()),
+        ];
+
+        params.into_iter().flatten().collect::<Vec<_>>().join(",")
+    }
+}
+
+/// Converts Query Parameters representation (style=form, explode=false) to a SystemKernel value
+/// as specified in https://swagger.io/docs/specification/serialization/
+/// Should be implemented in a serde deserializer
+impl std::str::FromStr for SystemKernel {
+    type Err = String;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        /// An intermediate representation of the struct to use for parsing.
+        #[derive(Default)]
+        #[allow(dead_code)]
+        struct IntermediateRep {
+            pub build: Vec<String>,
+            pub machine: Vec<String>,
+            pub version: Vec<String>,
+        }
+
+        let mut intermediate_rep = IntermediateRep::default();
+
+        // Parse into intermediate representation
+        let mut string_iter = s.split(',');
+        let mut key_result = string_iter.next();
+
+        while key_result.is_some() {
+            let val = match string_iter.next() {
+                Some(x) => x,
+                None => {
+                    return std::result::Result::Err(
+                        "Missing value while parsing SystemKernel".to_string(),
+                    )
+                }
+            };
+
+            if let Some(key) = key_result {
+                #[allow(clippy::match_single_binding)]
+                match key {
+                    #[allow(clippy::redundant_clone)]
+                    "build" => intermediate_rep.build.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "machine" => intermediate_rep.machine.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    #[allow(clippy::redundant_clone)]
+                    "version" => intermediate_rep.version.push(
+                        <String as std::str::FromStr>::from_str(val).map_err(|x| x.to_string())?,
+                    ),
+                    _ => {
+                        return std::result::Result::Err(
+                            "Unexpected key while parsing SystemKernel".to_string(),
+                        )
+                    }
+                }
+            }
+
+            // Get the next key
+            key_result = string_iter.next();
+        }
+
+        // Use the intermediate representation to return the struct
+        std::result::Result::Ok(SystemKernel {
+            build: intermediate_rep
+                .build
+                .into_iter()
+                .next()
+                .ok_or_else(|| "build missing in SystemKernel".to_string())?,
+            machine: intermediate_rep
+                .machine
+                .into_iter()
+                .next()
+                .ok_or_else(|| "machine missing in SystemKernel".to_string())?,
+            version: intermediate_rep
+                .version
+                .into_iter()
+                .next()
+                .ok_or_else(|| "version missing in SystemKernel".to_string())?,
+        })
+    }
+}
+
+// Methods for converting between header::IntoHeaderValue<SystemKernel> and HeaderValue
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<header::IntoHeaderValue<SystemKernel>> for HeaderValue {
+    type Error = String;
+
+    fn try_from(
+        hdr_value: header::IntoHeaderValue<SystemKernel>,
+    ) -> std::result::Result<Self, Self::Error> {
+        let hdr_value = hdr_value.to_string();
+        match HeaderValue::from_str(&hdr_value) {
+            std::result::Result::Ok(value) => std::result::Result::Ok(value),
+            std::result::Result::Err(e) => std::result::Result::Err(format!(
+                "Invalid header value for SystemKernel - value: {} is invalid {}",
+                hdr_value, e
+            )),
+        }
+    }
+}
+
+#[cfg(feature = "server")]
+impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<SystemKernel> {
+    type Error = String;
+
+    fn try_from(hdr_value: HeaderValue) -> std::result::Result<Self, Self::Error> {
+        match hdr_value.to_str() {
+            std::result::Result::Ok(value) => {
+                match <SystemKernel as std::str::FromStr>::from_str(value) {
+                    std::result::Result::Ok(value) => {
+                        std::result::Result::Ok(header::IntoHeaderValue(value))
+                    }
+                    std::result::Result::Err(err) => std::result::Result::Err(format!(
+                        "Unable to convert header value '{}' into SystemKernel - {}",
                         value, err
                     )),
                 }
@@ -5660,21 +5504,16 @@ impl std::convert::TryFrom<HeaderValue> for header::IntoHeaderValue<SystemPingGe
 #[cfg_attr(feature = "conversion", derive(frunk::LabelledGeneric))]
 pub struct SystemVersionGet200Response {
     #[serde(rename = "api")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub api: Option<String>,
+    pub api: String,
 
     #[serde(rename = "core")]
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub core: Option<String>,
+    pub core: String,
 }
 
 impl SystemVersionGet200Response {
     #[allow(clippy::new_without_default, clippy::too_many_arguments)]
-    pub fn new() -> SystemVersionGet200Response {
-        SystemVersionGet200Response {
-            api: None,
-            core: None,
-        }
+    pub fn new(api: String, core: String) -> SystemVersionGet200Response {
+        SystemVersionGet200Response { api, core }
     }
 }
 
@@ -5684,12 +5523,10 @@ impl SystemVersionGet200Response {
 impl std::string::ToString for SystemVersionGet200Response {
     fn to_string(&self) -> String {
         let params: Vec<Option<String>> = vec![
-            self.api
-                .as_ref()
-                .map(|api| ["api".to_string(), api.to_string()].join(",")),
-            self.core
-                .as_ref()
-                .map(|core| ["core".to_string(), core.to_string()].join(",")),
+            Some("api".to_string()),
+            Some(self.api.to_string()),
+            Some("core".to_string()),
+            Some(self.core.to_string()),
         ];
 
         params.into_iter().flatten().collect::<Vec<_>>().join(",")
@@ -5752,8 +5589,16 @@ impl std::str::FromStr for SystemVersionGet200Response {
 
         // Use the intermediate representation to return the struct
         std::result::Result::Ok(SystemVersionGet200Response {
-            api: intermediate_rep.api.into_iter().next(),
-            core: intermediate_rep.core.into_iter().next(),
+            api: intermediate_rep
+                .api
+                .into_iter()
+                .next()
+                .ok_or_else(|| "api missing in SystemVersionGet200Response".to_string())?,
+            core: intermediate_rep
+                .core
+                .into_iter()
+                .next()
+                .ok_or_else(|| "core missing in SystemVersionGet200Response".to_string())?,
         })
     }
 }

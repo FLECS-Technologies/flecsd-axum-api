@@ -57,9 +57,9 @@ pub enum AppsInstallPostResponse {
     /// Accepted
     Status202_Accepted(models::JobMeta),
     /// Malformed request
-    Status400_MalformedRequest(models::AppsInstallPost400Response),
+    Status400_MalformedRequest(models::AdditionalInfo),
     /// Internal server error
-    Status500_InternalServerError(models::AppsInstallPost500Response),
+    Status500_InternalServerError(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -69,7 +69,7 @@ pub enum AppsSideloadPostResponse {
     /// Accepted
     Status202_Accepted(models::JobMeta),
     /// Malformed request
-    Status400_MalformedRequest(models::AppsInstallPost400Response),
+    Status400_MalformedRequest(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -77,9 +77,9 @@ pub enum AppsSideloadPostResponse {
 #[allow(clippy::large_enum_variant)]
 pub enum DeviceLicenseActivationPostResponse {
     /// Success
-    Status200_Success(models::SystemPingGet200Response),
+    Status200_Success(models::AdditionalInfo),
     /// Internal server error
-    Status500_InternalServerError(models::AppsInstallPost500Response),
+    Status500_InternalServerError(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -89,7 +89,7 @@ pub enum DeviceLicenseActivationStatusGetResponse {
     /// Success
     Status200_Success(models::DeviceLicenseActivationStatusGet200Response),
     /// Internal server error
-    Status500_InternalServerError(models::AppsInstallPost500Response),
+    Status500_InternalServerError(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -98,50 +98,8 @@ pub enum DeviceLicenseActivationStatusGetResponse {
 pub enum FlunderBrowseGetResponse {
     /// Success
     Status200_Success(models::FlunderBrowseGet200Response),
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
-pub enum InstanceInstanceIdConfigGetResponse {
-    /// Success
-    Status200_Success(models::InstanceInstanceIdConfigGet200Response),
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
-pub enum InstanceInstanceIdConfigPostResponse {
-    /// Success
-    Status200_Success(models::InstanceInstanceIdConfigGet200Response),
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
-pub enum InstanceInstanceIdLogsGetResponse {
-    /// Success
-    Status200_Success(models::InstanceInstanceIdLogsGet200Response),
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
-pub enum InstanceInstanceIdStartPostResponse {
-    /// Accepted
-    Status202_Accepted(models::JobMeta),
-    /// No instance with this instance_id found
-    Status404_NoInstanceWithThisInstance,
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[must_use]
-#[allow(clippy::large_enum_variant)]
-pub enum InstanceInstanceIdStopPostResponse {
-    /// Accepted
-    Status202_Accepted(models::JobMeta),
-    /// No instance with this instance_id found
-    Status404_NoInstanceWithThisInstance,
+    /// Internal server error
+    Status500_InternalServerError(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -151,7 +109,7 @@ pub enum InstancesCreatePostResponse {
     /// Accepted
     Status202_Accepted(models::JobMeta),
     /// Malformed request
-    Status400_MalformedRequest(models::AppsInstallPost400Response),
+    Status400_MalformedRequest(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -160,6 +118,26 @@ pub enum InstancesCreatePostResponse {
 pub enum InstancesGetResponse {
     /// Success
     Status200_Success(Vec<models::AppInstance>),
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdConfigGetResponse {
+    /// Success
+    Status200_Success(models::InstanceConfig),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdConfigPostResponse {
+    /// Success
+    Status200_Success(models::InstanceConfig),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -180,12 +158,46 @@ pub enum InstancesInstanceIdGetResponse {
     Status200_Success(models::InstancesInstanceIdGet200Response),
     /// No instance with this instance_id found
     Status404_NoInstanceWithThisInstance,
+    /// Internal server error
+    Status500_InternalServerError(models::AdditionalInfo),
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdLogsGetResponse {
+    /// Success
+    Status200_Success(models::InstancesInstanceIdLogsGet200Response),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+    /// Internal server error
+    Status500_InternalServerError(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
 pub enum InstancesInstanceIdPatchResponse {
+    /// Accepted
+    Status202_Accepted(models::JobMeta),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdStartPostResponse {
+    /// Accepted
+    Status202_Accepted(models::JobMeta),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdStopPostResponse {
     /// Accepted
     Status202_Accepted(models::JobMeta),
     /// No instance with this instance_id found
@@ -208,6 +220,8 @@ pub enum JobsJobIdDeleteResponse {
     Status200_Success,
     /// Not found
     Status404_NotFound,
+    /// Job not finished
+    Status400_JobNotFinished(String),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -223,9 +237,17 @@ pub enum JobsJobIdGetResponse {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
+pub enum SystemInfoGetResponse {
+    /// Sucess
+    Status200_Sucess(models::SystemInfo),
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
 pub enum SystemPingGetResponse {
     /// Success
-    Status200_Success(models::SystemPingGet200Response),
+    Status200_Success(models::AdditionalInfo),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -327,62 +349,6 @@ pub trait Api {
         query_params: models::FlunderBrowseGetQueryParams,
     ) -> Result<FlunderBrowseGetResponse, String>;
 
-    /// Get configuration of an Instance.
-    ///
-    /// InstanceInstanceIdConfigGet - GET /instance/{instance_id}/config
-    async fn instance_instance_id_config_get(
-        &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: models::InstanceInstanceIdConfigGetPathParams,
-    ) -> Result<InstanceInstanceIdConfigGetResponse, String>;
-
-    /// Update configuration of an Instance.
-    ///
-    /// InstanceInstanceIdConfigPost - POST /instance/{instance_id}/config
-    async fn instance_instance_id_config_post(
-        &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: models::InstanceInstanceIdConfigPostPathParams,
-        body: models::InstanceInstanceIdConfigPostRequest,
-    ) -> Result<InstanceInstanceIdConfigPostResponse, String>;
-
-    /// Retrieve logs of an Instance.
-    ///
-    /// InstanceInstanceIdLogsGet - GET /instance/{instance_id}/logs
-    async fn instance_instance_id_logs_get(
-        &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: models::InstanceInstanceIdLogsGetPathParams,
-    ) -> Result<InstanceInstanceIdLogsGetResponse, String>;
-
-    /// Start an App instance.
-    ///
-    /// InstanceInstanceIdStartPost - POST /instance/{instance_id}/start
-    async fn instance_instance_id_start_post(
-        &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: models::InstanceInstanceIdStartPostPathParams,
-    ) -> Result<InstanceInstanceIdStartPostResponse, String>;
-
-    /// Stop an App instance.
-    ///
-    /// InstanceInstanceIdStopPost - POST /instance/{instance_id}/stop
-    async fn instance_instance_id_stop_post(
-        &self,
-        method: Method,
-        host: Host,
-        cookies: CookieJar,
-        path_params: models::InstanceInstanceIdStopPostPathParams,
-    ) -> Result<InstanceInstanceIdStopPostResponse, String>;
-
     /// Create new instance of an installed App.
     ///
     /// InstancesCreatePost - POST /instances/create
@@ -404,6 +370,29 @@ pub trait Api {
         cookies: CookieJar,
         query_params: models::InstancesGetQueryParams,
     ) -> Result<InstancesGetResponse, String>;
+
+    /// Get configuration of an Instance.
+    ///
+    /// InstancesInstanceIdConfigGet - GET /instances/{instance_id}/config
+    async fn instances_instance_id_config_get(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdConfigGetPathParams,
+    ) -> Result<InstancesInstanceIdConfigGetResponse, String>;
+
+    /// Update configuration of an Instance.
+    ///
+    /// InstancesInstanceIdConfigPost - POST /instances/{instance_id}/config
+    async fn instances_instance_id_config_post(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdConfigPostPathParams,
+        body: models::InstanceConfig,
+    ) -> Result<InstancesInstanceIdConfigPostResponse, String>;
 
     /// Delete a single instance.
     ///
@@ -427,6 +416,17 @@ pub trait Api {
         path_params: models::InstancesInstanceIdGetPathParams,
     ) -> Result<InstancesInstanceIdGetResponse, String>;
 
+    /// Retrieve logs of an Instance.
+    ///
+    /// InstancesInstanceIdLogsGet - GET /instances/{instance_id}/logs
+    async fn instances_instance_id_logs_get(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdLogsGetPathParams,
+    ) -> Result<InstancesInstanceIdLogsGetResponse, String>;
+
     /// Update or downgrade Instance to another App version.
     ///
     /// InstancesInstanceIdPatch - PATCH /instances/{instance_id}
@@ -438,6 +438,28 @@ pub trait Api {
         path_params: models::InstancesInstanceIdPatchPathParams,
         body: models::InstancesInstanceIdPatchRequest,
     ) -> Result<InstancesInstanceIdPatchResponse, String>;
+
+    /// Start an App instance.
+    ///
+    /// InstancesInstanceIdStartPost - POST /instances/{instance_id}/start
+    async fn instances_instance_id_start_post(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdStartPostPathParams,
+    ) -> Result<InstancesInstanceIdStartPostResponse, String>;
+
+    /// Stop an App instance.
+    ///
+    /// InstancesInstanceIdStopPost - POST /instances/{instance_id}/stop
+    async fn instances_instance_id_stop_post(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdStopPostPathParams,
+    ) -> Result<InstancesInstanceIdStopPostResponse, String>;
 
     /// Retrieve a list of all pending/queued/running/failed/cancelled jobs.
     ///
@@ -470,6 +492,16 @@ pub trait Api {
         cookies: CookieJar,
         path_params: models::JobsJobIdGetPathParams,
     ) -> Result<JobsJobIdGetResponse, String>;
+
+    /// Get architecture and operating system information.
+    ///
+    /// SystemInfoGet - GET /system/info
+    async fn system_info_get(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+    ) -> Result<SystemInfoGetResponse, String>;
 
     /// Check daemon availability and connectivity.
     ///
