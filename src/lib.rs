@@ -19,7 +19,7 @@ use serde::{Deserialize, Serialize};
 
 use types::*;
 
-pub const BASE_PATH: &str = "";
+pub const BASE_PATH: &str = "/v2";
 pub const API_VERSION: &str = "2.0.0";
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -264,7 +264,7 @@ pub enum SystemVersionGetResponse {
 pub trait Api {
     /// Uninstall one or all versions an App.
     ///
-    /// AppsAppDelete - DELETE /apps/{app}
+    /// AppsAppDelete - DELETE /v2/apps/{app}
     async fn apps_app_delete(
         &self,
         method: Method,
@@ -276,7 +276,7 @@ pub trait Api {
 
     /// Query all versions or specific versions of an App.
     ///
-    /// AppsAppGet - GET /apps/{app}
+    /// AppsAppGet - GET /v2/apps/{app}
     async fn apps_app_get(
         &self,
         method: Method,
@@ -288,7 +288,7 @@ pub trait Api {
 
     /// Query installed Apps.
     ///
-    /// AppsGet - GET /apps
+    /// AppsGet - GET /v2/apps
     async fn apps_get(
         &self,
         method: Method,
@@ -298,7 +298,7 @@ pub trait Api {
 
     /// Install an App from the FLECS marketplace.
     ///
-    /// AppsInstallPost - POST /apps/install
+    /// AppsInstallPost - POST /v2/apps/install
     async fn apps_install_post(
         &self,
         method: Method,
@@ -309,7 +309,7 @@ pub trait Api {
 
     /// Sideload an App from its manifest.
     ///
-    /// AppsSideloadPost - POST /apps/sideload
+    /// AppsSideloadPost - POST /v2/apps/sideload
     async fn apps_sideload_post(
         &self,
         method: Method,
@@ -320,7 +320,7 @@ pub trait Api {
 
     /// Execute device activation.
     ///
-    /// DeviceLicenseActivationPost - POST /device/license/activation
+    /// DeviceLicenseActivationPost - POST /v2/device/license/activation
     async fn device_license_activation_post(
         &self,
         method: Method,
@@ -330,7 +330,7 @@ pub trait Api {
 
     /// Check if device is activated.
     ///
-    /// DeviceLicenseActivationStatusGet - GET /device/license/activation/status
+    /// DeviceLicenseActivationStatusGet - GET /v2/device/license/activation/status
     async fn device_license_activation_status_get(
         &self,
         method: Method,
@@ -340,7 +340,7 @@ pub trait Api {
 
     /// Retrieve stored flunder topics alongside their values.
     ///
-    /// FlunderBrowseGet - GET /flunder/browse
+    /// FlunderBrowseGet - GET /v2/flunder/browse
     async fn flunder_browse_get(
         &self,
         method: Method,
@@ -351,7 +351,7 @@ pub trait Api {
 
     /// Create new instance of an installed App.
     ///
-    /// InstancesCreatePost - POST /instances/create
+    /// InstancesCreatePost - POST /v2/instances/create
     async fn instances_create_post(
         &self,
         method: Method,
@@ -362,7 +362,7 @@ pub trait Api {
 
     /// Query all instances of one or all Apps.
     ///
-    /// InstancesGet - GET /instances
+    /// InstancesGet - GET /v2/instances
     async fn instances_get(
         &self,
         method: Method,
@@ -373,7 +373,7 @@ pub trait Api {
 
     /// Get configuration of an Instance.
     ///
-    /// InstancesInstanceIdConfigGet - GET /instances/{instance_id}/config
+    /// InstancesInstanceIdConfigGet - GET /v2/instances/{instance_id}/config
     async fn instances_instance_id_config_get(
         &self,
         method: Method,
@@ -384,7 +384,7 @@ pub trait Api {
 
     /// Update configuration of an Instance.
     ///
-    /// InstancesInstanceIdConfigPost - POST /instances/{instance_id}/config
+    /// InstancesInstanceIdConfigPost - POST /v2/instances/{instance_id}/config
     async fn instances_instance_id_config_post(
         &self,
         method: Method,
@@ -396,7 +396,7 @@ pub trait Api {
 
     /// Delete a single instance.
     ///
-    /// InstancesInstanceIdDelete - DELETE /instances/{instance_id}
+    /// InstancesInstanceIdDelete - DELETE /v2/instances/{instance_id}
     async fn instances_instance_id_delete(
         &self,
         method: Method,
@@ -407,7 +407,7 @@ pub trait Api {
 
     /// Obtain details of an App instance.
     ///
-    /// InstancesInstanceIdGet - GET /instances/{instance_id}
+    /// InstancesInstanceIdGet - GET /v2/instances/{instance_id}
     async fn instances_instance_id_get(
         &self,
         method: Method,
@@ -418,7 +418,7 @@ pub trait Api {
 
     /// Retrieve logs of an Instance.
     ///
-    /// InstancesInstanceIdLogsGet - GET /instances/{instance_id}/logs
+    /// InstancesInstanceIdLogsGet - GET /v2/instances/{instance_id}/logs
     async fn instances_instance_id_logs_get(
         &self,
         method: Method,
@@ -429,7 +429,7 @@ pub trait Api {
 
     /// Update or downgrade Instance to another App version.
     ///
-    /// InstancesInstanceIdPatch - PATCH /instances/{instance_id}
+    /// InstancesInstanceIdPatch - PATCH /v2/instances/{instance_id}
     async fn instances_instance_id_patch(
         &self,
         method: Method,
@@ -441,7 +441,7 @@ pub trait Api {
 
     /// Start an App instance.
     ///
-    /// InstancesInstanceIdStartPost - POST /instances/{instance_id}/start
+    /// InstancesInstanceIdStartPost - POST /v2/instances/{instance_id}/start
     async fn instances_instance_id_start_post(
         &self,
         method: Method,
@@ -452,7 +452,7 @@ pub trait Api {
 
     /// Stop an App instance.
     ///
-    /// InstancesInstanceIdStopPost - POST /instances/{instance_id}/stop
+    /// InstancesInstanceIdStopPost - POST /v2/instances/{instance_id}/stop
     async fn instances_instance_id_stop_post(
         &self,
         method: Method,
@@ -463,7 +463,7 @@ pub trait Api {
 
     /// Retrieve a list of all pending/queued/running/failed/cancelled jobs.
     ///
-    /// JobsGet - GET /jobs
+    /// JobsGet - GET /v2/jobs
     async fn jobs_get(
         &self,
         method: Method,
@@ -473,7 +473,7 @@ pub trait Api {
 
     /// Cancel job or remove failed/successful/cancelled job from journal.
     ///
-    /// JobsJobIdDelete - DELETE /jobs/{job_id}
+    /// JobsJobIdDelete - DELETE /v2/jobs/{job_id}
     async fn jobs_job_id_delete(
         &self,
         method: Method,
@@ -484,7 +484,7 @@ pub trait Api {
 
     /// Retrieve information for specific job_id.
     ///
-    /// JobsJobIdGet - GET /jobs/{job_id}
+    /// JobsJobIdGet - GET /v2/jobs/{job_id}
     async fn jobs_job_id_get(
         &self,
         method: Method,
@@ -495,7 +495,7 @@ pub trait Api {
 
     /// Get architecture and operating system information.
     ///
-    /// SystemInfoGet - GET /system/info
+    /// SystemInfoGet - GET /v2/system/info
     async fn system_info_get(
         &self,
         method: Method,
@@ -505,7 +505,7 @@ pub trait Api {
 
     /// Check daemon availability and connectivity.
     ///
-    /// SystemPingGet - GET /system/ping
+    /// SystemPingGet - GET /v2/system/ping
     async fn system_ping_get(
         &self,
         method: Method,
@@ -515,7 +515,7 @@ pub trait Api {
 
     /// Get FLECS core and API version.
     ///
-    /// SystemVersionGet - GET /system/version
+    /// SystemVersionGet - GET /v2/system/version
     async fn system_version_get(
         &self,
         method: Method,

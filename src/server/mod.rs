@@ -32,55 +32,55 @@ where
 {
     // build our application with a route
     Router::new()
-        .route("/apps", get(apps_get::<I, A>))
+        .route("/v2/apps", get(apps_get::<I, A>))
         .route(
-            "/apps/:app",
+            "/v2/apps/:app",
             delete(apps_app_delete::<I, A>).get(apps_app_get::<I, A>),
         )
-        .route("/apps/install", post(apps_install_post::<I, A>))
-        .route("/apps/sideload", post(apps_sideload_post::<I, A>))
+        .route("/v2/apps/install", post(apps_install_post::<I, A>))
+        .route("/v2/apps/sideload", post(apps_sideload_post::<I, A>))
         .route(
-            "/device/license/activation",
+            "/v2/device/license/activation",
             post(device_license_activation_post::<I, A>),
         )
         .route(
-            "/device/license/activation/status",
+            "/v2/device/license/activation/status",
             get(device_license_activation_status_get::<I, A>),
         )
-        .route("/flunder/browse", get(flunder_browse_get::<I, A>))
-        .route("/instances", get(instances_get::<I, A>))
+        .route("/v2/flunder/browse", get(flunder_browse_get::<I, A>))
+        .route("/v2/instances", get(instances_get::<I, A>))
         .route(
-            "/instances/:instance_id",
+            "/v2/instances/:instance_id",
             delete(instances_instance_id_delete::<I, A>)
                 .get(instances_instance_id_get::<I, A>)
                 .patch(instances_instance_id_patch::<I, A>),
         )
         .route(
-            "/instances/:instance_id/config",
+            "/v2/instances/:instance_id/config",
             get(instances_instance_id_config_get::<I, A>)
                 .post(instances_instance_id_config_post::<I, A>),
         )
         .route(
-            "/instances/:instance_id/logs",
+            "/v2/instances/:instance_id/logs",
             get(instances_instance_id_logs_get::<I, A>),
         )
         .route(
-            "/instances/:instance_id/start",
+            "/v2/instances/:instance_id/start",
             post(instances_instance_id_start_post::<I, A>),
         )
         .route(
-            "/instances/:instance_id/stop",
+            "/v2/instances/:instance_id/stop",
             post(instances_instance_id_stop_post::<I, A>),
         )
-        .route("/instances/create", post(instances_create_post::<I, A>))
-        .route("/jobs", get(jobs_get::<I, A>))
+        .route("/v2/instances/create", post(instances_create_post::<I, A>))
+        .route("/v2/jobs", get(jobs_get::<I, A>))
         .route(
-            "/jobs/:job_id",
+            "/v2/jobs/:job_id",
             delete(jobs_job_id_delete::<I, A>).get(jobs_job_id_get::<I, A>),
         )
-        .route("/system/info", get(system_info_get::<I, A>))
-        .route("/system/ping", get(system_ping_get::<I, A>))
-        .route("/system/version", get(system_version_get::<I, A>))
+        .route("/v2/system/info", get(system_info_get::<I, A>))
+        .route("/v2/system/ping", get(system_ping_get::<I, A>))
+        .route("/v2/system/version", get(system_version_get::<I, A>))
         .with_state(api_impl)
 }
 
@@ -101,7 +101,7 @@ fn apps_app_delete_validation(
     Ok((path_params, query_params))
 }
 
-/// AppsAppDelete - DELETE /apps/{app}
+/// AppsAppDelete - DELETE /v2/apps/{app}
 #[tracing::instrument(skip_all)]
 async fn apps_app_delete<I, A>(
     method: Method,
@@ -192,7 +192,7 @@ fn apps_app_get_validation(
     Ok((path_params, query_params))
 }
 
-/// AppsAppGet - GET /apps/{app}
+/// AppsAppGet - GET /v2/apps/{app}
 #[tracing::instrument(skip_all)]
 async fn apps_app_get<I, A>(
     method: Method,
@@ -274,7 +274,7 @@ fn apps_get_validation() -> std::result::Result<(), ValidationErrors> {
     Ok(())
 }
 
-/// AppsGet - GET /apps
+/// AppsGet - GET /v2/apps
 #[tracing::instrument(skip_all)]
 async fn apps_get<I, A>(
     method: Method,
@@ -358,7 +358,7 @@ fn apps_install_post_validation(
     Ok((body,))
 }
 
-/// AppsInstallPost - POST /apps/install
+/// AppsInstallPost - POST /v2/apps/install
 #[tracing::instrument(skip_all)]
 async fn apps_install_post<I, A>(
     method: Method,
@@ -492,7 +492,7 @@ fn apps_sideload_post_validation(
     Ok((body,))
 }
 
-/// AppsSideloadPost - POST /apps/sideload
+/// AppsSideloadPost - POST /v2/apps/sideload
 #[tracing::instrument(skip_all)]
 async fn apps_sideload_post<I, A>(
     method: Method,
@@ -591,7 +591,7 @@ fn device_license_activation_post_validation() -> std::result::Result<(), Valida
     Ok(())
 }
 
-/// DeviceLicenseActivationPost - POST /device/license/activation
+/// DeviceLicenseActivationPost - POST /v2/device/license/activation
 #[tracing::instrument(skip_all)]
 async fn device_license_activation_post<I, A>(
     method: Method,
@@ -690,7 +690,7 @@ fn device_license_activation_status_get_validation() -> std::result::Result<(), 
     Ok(())
 }
 
-/// DeviceLicenseActivationStatusGet - GET /device/license/activation/status
+/// DeviceLicenseActivationStatusGet - GET /v2/device/license/activation/status
 #[tracing::instrument(skip_all)]
 async fn device_license_activation_status_get<I, A>(
     method: Method,
@@ -793,7 +793,7 @@ fn flunder_browse_get_validation(
     Ok((query_params,))
 }
 
-/// FlunderBrowseGet - GET /flunder/browse
+/// FlunderBrowseGet - GET /v2/flunder/browse
 #[tracing::instrument(skip_all)]
 async fn flunder_browse_get<I, A>(
     method: Method,
@@ -905,7 +905,7 @@ fn instances_create_post_validation(
     Ok((body,))
 }
 
-/// InstancesCreatePost - POST /instances/create
+/// InstancesCreatePost - POST /v2/instances/create
 #[tracing::instrument(skip_all)]
 async fn instances_create_post<I, A>(
     method: Method,
@@ -1008,7 +1008,7 @@ fn instances_get_validation(
     Ok((query_params,))
 }
 
-/// InstancesGet - GET /instances
+/// InstancesGet - GET /v2/instances
 #[tracing::instrument(skip_all)]
 async fn instances_get<I, A>(
     method: Method,
@@ -1088,7 +1088,7 @@ fn instances_instance_id_config_get_validation(
     Ok((path_params,))
 }
 
-/// InstancesInstanceIdConfigGet - GET /instances/{instance_id}/config
+/// InstancesInstanceIdConfigGet - GET /v2/instances/{instance_id}/config
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_config_get<I, A>(
     method: Method,
@@ -1190,7 +1190,7 @@ fn instances_instance_id_config_post_validation(
     Ok((path_params, body))
 }
 
-/// InstancesInstanceIdConfigPost - POST /instances/{instance_id}/config
+/// InstancesInstanceIdConfigPost - POST /v2/instances/{instance_id}/config
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_config_post<I, A>(
     method: Method,
@@ -1277,7 +1277,7 @@ fn instances_instance_id_delete_validation(
     Ok((path_params,))
 }
 
-/// InstancesInstanceIdDelete - DELETE /instances/{instance_id}
+/// InstancesInstanceIdDelete - DELETE /v2/instances/{instance_id}
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_delete<I, A>(
     method: Method,
@@ -1362,7 +1362,7 @@ fn instances_instance_id_get_validation(
     Ok((path_params,))
 }
 
-/// InstancesInstanceIdGet - GET /instances/{instance_id}
+/// InstancesInstanceIdGet - GET /v2/instances/{instance_id}
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_get<I, A>(
     method: Method,
@@ -1470,7 +1470,7 @@ fn instances_instance_id_logs_get_validation(
     Ok((path_params,))
 }
 
-/// InstancesInstanceIdLogsGet - GET /instances/{instance_id}/logs
+/// InstancesInstanceIdLogsGet - GET /v2/instances/{instance_id}/logs
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_logs_get<I, A>(
     method: Method,
@@ -1594,7 +1594,7 @@ fn instances_instance_id_patch_validation(
     Ok((path_params, body))
 }
 
-/// InstancesInstanceIdPatch - PATCH /instances/{instance_id}
+/// InstancesInstanceIdPatch - PATCH /v2/instances/{instance_id}
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_patch<I, A>(
     method: Method,
@@ -1681,7 +1681,7 @@ fn instances_instance_id_start_post_validation(
     Ok((path_params,))
 }
 
-/// InstancesInstanceIdStartPost - POST /instances/{instance_id}/start
+/// InstancesInstanceIdStartPost - POST /v2/instances/{instance_id}/start
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_start_post<I, A>(
     method: Method,
@@ -1767,7 +1767,7 @@ fn instances_instance_id_stop_post_validation(
     Ok((path_params,))
 }
 
-/// InstancesInstanceIdStopPost - POST /instances/{instance_id}/stop
+/// InstancesInstanceIdStopPost - POST /v2/instances/{instance_id}/stop
 #[tracing::instrument(skip_all)]
 async fn instances_instance_id_stop_post<I, A>(
     method: Method,
@@ -1849,7 +1849,7 @@ fn jobs_get_validation() -> std::result::Result<(), ValidationErrors> {
     Ok(())
 }
 
-/// JobsGet - GET /jobs
+/// JobsGet - GET /v2/jobs
 #[tracing::instrument(skip_all)]
 async fn jobs_get<I, A>(
     method: Method,
@@ -1925,7 +1925,7 @@ fn jobs_job_id_delete_validation(
     Ok((path_params,))
 }
 
-/// JobsJobIdDelete - DELETE /jobs/{job_id}
+/// JobsJobIdDelete - DELETE /v2/jobs/{job_id}
 #[tracing::instrument(skip_all)]
 async fn jobs_job_id_delete<I, A>(
     method: Method,
@@ -2007,7 +2007,7 @@ fn jobs_job_id_get_validation(
     Ok((path_params,))
 }
 
-/// JobsJobIdGet - GET /jobs/{job_id}
+/// JobsJobIdGet - GET /v2/jobs/{job_id}
 #[tracing::instrument(skip_all)]
 async fn jobs_job_id_get<I, A>(
     method: Method,
@@ -2087,7 +2087,7 @@ fn system_info_get_validation() -> std::result::Result<(), ValidationErrors> {
     Ok(())
 }
 
-/// SystemInfoGet - GET /system/info
+/// SystemInfoGet - GET /v2/system/info
 #[tracing::instrument(skip_all)]
 async fn system_info_get<I, A>(
     method: Method,
@@ -2162,7 +2162,7 @@ fn system_ping_get_validation() -> std::result::Result<(), ValidationErrors> {
     Ok(())
 }
 
-/// SystemPingGet - GET /system/ping
+/// SystemPingGet - GET /v2/system/ping
 #[tracing::instrument(skip_all)]
 async fn system_ping_get<I, A>(
     method: Method,
@@ -2237,7 +2237,7 @@ fn system_version_get_validation() -> std::result::Result<(), ValidationErrors> 
     Ok(())
 }
 
-/// SystemVersionGet - GET /system/version
+/// SystemVersionGet - GET /v2/system/version
 #[tracing::instrument(skip_all)]
 async fn system_version_get<I, A>(
     method: Method,
