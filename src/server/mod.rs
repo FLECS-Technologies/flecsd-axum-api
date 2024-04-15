@@ -16,7 +16,10 @@ use crate::{
     Api, AppsAppDeleteResponse, AppsAppGetResponse, AppsGetResponse, AppsInstallPostResponse,
     AppsSideloadPostResponse, DeviceLicenseActivationPostResponse,
     DeviceLicenseActivationStatusGetResponse, FlunderBrowseGetResponse,
-    InstancesCreatePostResponse, InstancesGetResponse, InstancesInstanceIdConfigGetResponse,
+    InstancesCreatePostResponse, InstancesGetResponse,
+    InstancesInstanceIdConfigEnvironmentDeleteResponse,
+    InstancesInstanceIdConfigEnvironmentGetResponse,
+    InstancesInstanceIdConfigEnvironmentPutResponse, InstancesInstanceIdConfigGetResponse,
     InstancesInstanceIdConfigPostResponse, InstancesInstanceIdDeleteResponse,
     InstancesInstanceIdGetResponse, InstancesInstanceIdLogsGetResponse,
     InstancesInstanceIdPatchResponse, InstancesInstanceIdStartPostResponse,
@@ -59,6 +62,12 @@ where
             "/v2/instances/:instance_id/config",
             get(instances_instance_id_config_get::<I, A>)
                 .post(instances_instance_id_config_post::<I, A>),
+        )
+        .route(
+            "/v2/instances/:instance_id/config/environment",
+            delete(instances_instance_id_config_environment_delete::<I, A>)
+                .get(instances_instance_id_config_environment_get::<I, A>)
+                .put(instances_instance_id_config_environment_put::<I, A>),
         )
         .route(
             "/v2/instances/:instance_id/logs",
@@ -1072,6 +1081,280 @@ where
             response.status(500).body(Body::empty())
         }
     };
+
+    resp.map_err(|e| {
+        error!(error = ?e);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })
+}
+
+#[tracing::instrument(skip_all)]
+fn instances_instance_id_config_environment_delete_validation(
+    path_params: models::InstancesInstanceIdConfigEnvironmentDeletePathParams,
+) -> std::result::Result<
+    (models::InstancesInstanceIdConfigEnvironmentDeletePathParams,),
+    ValidationErrors,
+> {
+    path_params.validate()?;
+
+    Ok((path_params,))
+}
+
+/// InstancesInstanceIdConfigEnvironmentDelete - DELETE /v2/instances/{instance_id}/config/environment
+#[tracing::instrument(skip_all)]
+async fn instances_instance_id_config_environment_delete<I, A>(
+    method: Method,
+    host: Host,
+    cookies: CookieJar,
+    Path(path_params): Path<models::InstancesInstanceIdConfigEnvironmentDeletePathParams>,
+    State(api_impl): State<I>,
+) -> Result<Response, StatusCode>
+where
+    I: AsRef<A> + Send + Sync,
+    A: Api,
+{
+    #[allow(clippy::redundant_closure)]
+    let validation = tokio::task::spawn_blocking(move || {
+        instances_instance_id_config_environment_delete_validation(path_params)
+    })
+    .await
+    .unwrap();
+
+    let Ok((path_params,)) = validation else {
+        return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from(validation.unwrap_err().to_string()))
+            .map_err(|_| StatusCode::BAD_REQUEST);
+    };
+
+    let result = api_impl
+        .as_ref()
+        .instances_instance_id_config_environment_delete(method, host, cookies, path_params)
+        .await;
+
+    let mut response = Response::builder();
+
+    let resp = match result {
+                                            Ok(rsp) => match rsp {
+                                                InstancesInstanceIdConfigEnvironmentDeleteResponse::Status200_EnvironmentOfInstanceWithThisInstance
+                                                => {
+
+                                                  let mut response = response.status(200);
+                                                  response.body(Body::empty())
+                                                },
+                                                InstancesInstanceIdConfigEnvironmentDeleteResponse::Status404_NoInstanceWithThisInstance
+                                                => {
+
+                                                  let mut response = response.status(404);
+                                                  response.body(Body::empty())
+                                                },
+                                            },
+                                            Err(_) => {
+                                                // Application code returned an error. This should not happen, as the implementation should
+                                                // return a valid response.
+                                                response.status(500).body(Body::empty())
+                                            },
+                                        };
+
+    resp.map_err(|e| {
+        error!(error = ?e);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })
+}
+
+#[tracing::instrument(skip_all)]
+fn instances_instance_id_config_environment_get_validation(
+    path_params: models::InstancesInstanceIdConfigEnvironmentGetPathParams,
+) -> std::result::Result<
+    (models::InstancesInstanceIdConfigEnvironmentGetPathParams,),
+    ValidationErrors,
+> {
+    path_params.validate()?;
+
+    Ok((path_params,))
+}
+
+/// InstancesInstanceIdConfigEnvironmentGet - GET /v2/instances/{instance_id}/config/environment
+#[tracing::instrument(skip_all)]
+async fn instances_instance_id_config_environment_get<I, A>(
+    method: Method,
+    host: Host,
+    cookies: CookieJar,
+    Path(path_params): Path<models::InstancesInstanceIdConfigEnvironmentGetPathParams>,
+    State(api_impl): State<I>,
+) -> Result<Response, StatusCode>
+where
+    I: AsRef<A> + Send + Sync,
+    A: Api,
+{
+    #[allow(clippy::redundant_closure)]
+    let validation = tokio::task::spawn_blocking(move || {
+        instances_instance_id_config_environment_get_validation(path_params)
+    })
+    .await
+    .unwrap();
+
+    let Ok((path_params,)) = validation else {
+        return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from(validation.unwrap_err().to_string()))
+            .map_err(|_| StatusCode::BAD_REQUEST);
+    };
+
+    let result = api_impl
+        .as_ref()
+        .instances_instance_id_config_environment_get(method, host, cookies, path_params)
+        .await;
+
+    let mut response = Response::builder();
+
+    let resp = match result {
+                                            Ok(rsp) => match rsp {
+                                                InstancesInstanceIdConfigEnvironmentGetResponse::Status200_Success
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(200);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                                InstancesInstanceIdConfigEnvironmentGetResponse::Status404_NoInstanceWithThisInstance
+                                                => {
+
+                                                  let mut response = response.status(404);
+                                                  response.body(Body::empty())
+                                                },
+                                            },
+                                            Err(_) => {
+                                                // Application code returned an error. This should not happen, as the implementation should
+                                                // return a valid response.
+                                                response.status(500).body(Body::empty())
+                                            },
+                                        };
+
+    resp.map_err(|e| {
+        error!(error = ?e);
+        StatusCode::INTERNAL_SERVER_ERROR
+    })
+}
+
+#[derive(validator::Validate)]
+#[allow(dead_code)]
+struct InstancesInstanceIdConfigEnvironmentPutBodyValidator<'a> {
+    #[validate]
+    body: &'a models::InstanceEnvironment,
+}
+
+#[tracing::instrument(skip_all)]
+fn instances_instance_id_config_environment_put_validation(
+    path_params: models::InstancesInstanceIdConfigEnvironmentPutPathParams,
+    body: models::InstanceEnvironment,
+) -> std::result::Result<
+    (
+        models::InstancesInstanceIdConfigEnvironmentPutPathParams,
+        models::InstanceEnvironment,
+    ),
+    ValidationErrors,
+> {
+    path_params.validate()?;
+    let b = InstancesInstanceIdConfigEnvironmentPutBodyValidator { body: &body };
+    b.validate()?;
+
+    Ok((path_params, body))
+}
+
+/// InstancesInstanceIdConfigEnvironmentPut - PUT /v2/instances/{instance_id}/config/environment
+#[tracing::instrument(skip_all)]
+async fn instances_instance_id_config_environment_put<I, A>(
+    method: Method,
+    host: Host,
+    cookies: CookieJar,
+    Path(path_params): Path<models::InstancesInstanceIdConfigEnvironmentPutPathParams>,
+    State(api_impl): State<I>,
+    Json(body): Json<models::InstanceEnvironment>,
+) -> Result<Response, StatusCode>
+where
+    I: AsRef<A> + Send + Sync,
+    A: Api,
+{
+    #[allow(clippy::redundant_closure)]
+    let validation = tokio::task::spawn_blocking(move || {
+        instances_instance_id_config_environment_put_validation(path_params, body)
+    })
+    .await
+    .unwrap();
+
+    let Ok((path_params, body)) = validation else {
+        return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from(validation.unwrap_err().to_string()))
+            .map_err(|_| StatusCode::BAD_REQUEST);
+    };
+
+    let result = api_impl
+        .as_ref()
+        .instances_instance_id_config_environment_put(method, host, cookies, path_params, body)
+        .await;
+
+    let mut response = Response::builder();
+
+    let resp = match result {
+                                            Ok(rsp) => match rsp {
+                                                InstancesInstanceIdConfigEnvironmentPutResponse::Status200_EnvironmentForInstanceWithThisInstanceIdIsSet
+                                                => {
+
+                                                  let mut response = response.status(200);
+                                                  response.body(Body::empty())
+                                                },
+                                                InstancesInstanceIdConfigEnvironmentPutResponse::Status201_EnvironmentForInstanceWithThisInstanceIdWasCreated
+                                                => {
+
+                                                  let mut response = response.status(201);
+                                                  response.body(Body::empty())
+                                                },
+                                                InstancesInstanceIdConfigEnvironmentPutResponse::Status400_MalformedRequest
+                                                    (body)
+                                                => {
+
+                                                  let mut response = response.status(400);
+                                                  {
+                                                    let mut response_headers = response.headers_mut().unwrap();
+                                                    response_headers.insert(
+                                                        CONTENT_TYPE,
+                                                        HeaderValue::from_str("application/json").map_err(|e| { error!(error = ?e); StatusCode::INTERNAL_SERVER_ERROR })?);
+                                                  }
+
+                                                  let body_content =  tokio::task::spawn_blocking(move ||
+                                                      serde_json::to_vec(&body).map_err(|e| {
+                                                        error!(error = ?e);
+                                                        StatusCode::INTERNAL_SERVER_ERROR
+                                                      })).await.unwrap()?;
+                                                  response.body(Body::from(body_content))
+                                                },
+                                                InstancesInstanceIdConfigEnvironmentPutResponse::Status404_NoInstanceWithThisInstance
+                                                => {
+
+                                                  let mut response = response.status(404);
+                                                  response.body(Body::empty())
+                                                },
+                                            },
+                                            Err(_) => {
+                                                // Application code returned an error. This should not happen, as the implementation should
+                                                // return a valid response.
+                                                response.status(500).body(Body::empty())
+                                            },
+                                        };
 
     resp.map_err(|e| {
         error!(error = ?e);

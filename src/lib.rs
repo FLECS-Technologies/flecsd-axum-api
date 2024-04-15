@@ -123,6 +123,40 @@ pub enum InstancesGetResponse {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[must_use]
 #[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdConfigEnvironmentDeleteResponse {
+    /// Environment of instance with this instance_id was deleted
+    Status200_EnvironmentOfInstanceWithThisInstance,
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdConfigEnvironmentGetResponse {
+    /// Success
+    Status200_Success(models::InstanceEnvironment),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
+pub enum InstancesInstanceIdConfigEnvironmentPutResponse {
+    /// Environment for instance with this instance id is set
+    Status200_EnvironmentForInstanceWithThisInstanceIdIsSet,
+    /// Environment for instance with this instance id was created
+    Status201_EnvironmentForInstanceWithThisInstanceIdWasCreated,
+    /// Malformed request
+    Status400_MalformedRequest(models::AdditionalInfo),
+    /// No instance with this instance_id found
+    Status404_NoInstanceWithThisInstance,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[must_use]
+#[allow(clippy::large_enum_variant)]
 pub enum InstancesInstanceIdConfigGetResponse {
     /// Success
     Status200_Success(models::InstanceConfig),
@@ -370,6 +404,40 @@ pub trait Api {
         cookies: CookieJar,
         query_params: models::InstancesGetQueryParams,
     ) -> Result<InstancesGetResponse, String>;
+
+    /// Delete environment of an instance.
+    ///
+    /// InstancesInstanceIdConfigEnvironmentDelete - DELETE /v2/instances/{instance_id}/config/environment
+    async fn instances_instance_id_config_environment_delete(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdConfigEnvironmentDeletePathParams,
+    ) -> Result<InstancesInstanceIdConfigEnvironmentDeleteResponse, String>;
+
+    /// Retrieve environment of an instance.
+    ///
+    /// InstancesInstanceIdConfigEnvironmentGet - GET /v2/instances/{instance_id}/config/environment
+    async fn instances_instance_id_config_environment_get(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdConfigEnvironmentGetPathParams,
+    ) -> Result<InstancesInstanceIdConfigEnvironmentGetResponse, String>;
+
+    /// Modify or create environment of an instance.
+    ///
+    /// InstancesInstanceIdConfigEnvironmentPut - PUT /v2/instances/{instance_id}/config/environment
+    async fn instances_instance_id_config_environment_put(
+        &self,
+        method: Method,
+        host: Host,
+        cookies: CookieJar,
+        path_params: models::InstancesInstanceIdConfigEnvironmentPutPathParams,
+        body: models::InstanceEnvironment,
+    ) -> Result<InstancesInstanceIdConfigEnvironmentPutResponse, String>;
 
     /// Get configuration of an Instance.
     ///
